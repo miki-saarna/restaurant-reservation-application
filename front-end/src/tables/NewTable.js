@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { createTable } from '../utils/api';
 
 export default function NewTable() {
 
@@ -32,8 +33,12 @@ export default function NewTable() {
         if (formData.capacity < 1) {
             return setValidationError(`Capacity must be 1 person or greater.`)
         }
-
-        setFormData(initialFormState);
+        createTable(formData)
+            .then(() => {
+                setFormData(initialFormState);
+                return history.push('/');
+            })
+            .catch(setValidationError);
     }
 
     const cancelHandler = (event) => {

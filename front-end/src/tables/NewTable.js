@@ -34,11 +34,11 @@ export default function NewTable() {
             return setValidationError(`Capacity must be 1 person or greater.`)
         }
         createTable(formData)
-            .then(() => {
-                setFormData(initialFormState);
-                return history.push('/');
-            })
-            .catch(setValidationError);
+        .then(() => {
+            setFormData(initialFormState);
+            return history.push('/');
+        })
+        .catch(setValidationError);
     }
 
     const cancelHandler = (event) => {

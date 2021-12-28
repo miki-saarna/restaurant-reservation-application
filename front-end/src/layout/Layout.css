@@ -2,3 +2,12 @@
   background-color: #393a44;
   min-width: 200px;
 }
+
+.table {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.table li {
+  list-style-type: none;
+}

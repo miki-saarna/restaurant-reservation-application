@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import DetailedTable from "../tables/DetailedTable";
+import DetailedReservation from "../reservations/DetailedReservation";
 // import useQuery from "../utils/useQuery";
 
 /**
@@ -20,10 +22,16 @@ function Dashboard({ date }) {
 
 
   const query = useQuery();
-  date = query.get("date");
+  const dateFromQuery = query.get("date");
+  if (dateFromQuery) {
+    date = dateFromQuery;
+  }
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([]);
+  // add error below into body
+  const [tablesError, setTablesError] = useState([]);
 
   useEffect(loadDashboard, [date]);
 
@@ -33,8 +41,19 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal)
+      .then(setTables)
+      .catch(setTablesError);
     return () => abortController.abort();
   }
+
+  const listOfReservations = reservations.map((reservation) => (
+    <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
+  ))
+
+  const TablesList = tables.map((table) => (
+     <DetailedTable key={table.table_id} table={table} />
+  ))
 
   return (
     <main>
@@ -43,7 +62,14 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      <div className='table'>
+        <p>Today's reservations:</p>
+        {reservations.length ? listOfReservations : null}
+      </div>
+      <div className='table'>
+      <p>Tables:</p>
+        {tables.length ? TablesList : null}
+      </div>
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function DetailedReservation({ reservation }) {
     const {
@@ -34,6 +35,8 @@ export default function DetailedReservation({ reservation }) {
             <li>
                 People: {people}
             </li>
+            {/* can I remove the button below? Or do the tests rely on it? */}
+            <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button>
         </ul>
     )
 }

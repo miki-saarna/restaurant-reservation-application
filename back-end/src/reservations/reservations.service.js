@@ -8,12 +8,15 @@ async function readByDate(date) {
     return knex('reservations').select('*').where('reservation_date', date)
 }
 
+async function read(reservation_id) {
+    return knex('reservations').select('*').where({ reservation_id }).then((foundReservation) => foundReservation[0])
+}
+
 async function create(newReservation) {
     return knex('reservations')
         .insert(newReservation)
         .returning('*')
-        // is line below necessary?
-        // .then((insertedReservation) => insertedReservation[0])
+        .then(createdReservation => createdReservation[0])
 }
 
 async function destroy(id) {
@@ -27,4 +30,5 @@ module.exports = {
     readByDate,
     create,
     destroy,
+    read,
 }

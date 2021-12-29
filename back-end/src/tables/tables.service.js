@@ -8,7 +8,8 @@ async function list() {
 async function create(newTable) {
     return knex('tables')
         .insert(newTable)
-        .returning('*');
+        .returning('*')
+        .then((createdTable) => createdTable[0]);
 }
 
 async function update(table_id, reservation_id) {

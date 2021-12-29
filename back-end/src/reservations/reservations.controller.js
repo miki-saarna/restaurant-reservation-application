@@ -10,13 +10,14 @@ const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 
 const REQUIRED_PROPERTIES = [
   'first_name',
+  'last_name',
   'mobile_number',
   'reservation_date',
   'reservation_time',
   'people'
 ]
 
-const VALID_PROPERTIES = [...REQUIRED_PROPERTIES, 'last_name'];
+const VALID_PROPERTIES = [...REQUIRED_PROPERTIES];
 
 function onlyHasValidProperties(req, res, next) {
   const { data = {} } = req.body;
@@ -51,14 +52,34 @@ function hasRequiredProperties(properties) {
   }
 }
 
+function properFormat(req, res, next) {
+  const { reservation_date, reservation_time, people } = res.locals.data;
+
+  const dateArray = reservation_date.split('-');
+  dateArray[1] -= 1;
+  const reservationDate = new Date(...dateArray);
+
+  const timeArray = reservation_time.split(':');
+  const reservationTime = new Date(...timeArray);
+
+  reservationDate == "Invalid Date" ? next({ status: 400, message: `The 'reservation_date' property must be a date.`}) : null;
+
+  reservationTime == "Invalid Date" ? next({ status: 400, message: `The 'reservation_time' property must be a date.`}) : null;
+
+  typeof people === 'number' ? null : next({ status: 400, message: `The 'people' property must be a number type.`});
+  next();
+}
+
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
     const data = await service.readByDate(date)
-    res.json({ data })
+    const sortedData = data.sort((reservationA, reservationB) => reservationA.reservation_time - reservationB.reservation_time);
+    res.json({ data: sortedData })
   } else {
     const data = await service.list();
-    res.json({ data });
+    const sortedData = data.sort((reservationA, reservationB) => parseInt(reservationA.reservation_time.split(':')) - parseInt(reservationB.reservation_time.split(':')));
+    res.json({ data: sortedData });
   }
 }
 
@@ -88,7 +109,7 @@ async function create(req, res, next) {
   
   // validation if reservation date is in the past
   if (reservationDate - presentDate < 0) {
-    return next({ status: 400, message: `Reservation date and time cannot be for a past date.`})
+    return next({ status: 400, message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
   }
 
   // validation if reservation is on a tuesday
@@ -116,8 +137,15 @@ async function destroy(req, res) {
   res.sendStatus(204);
 }
 
+async function read(req, res) {
+  const reservationId = parseInt(req.params.reservationId);
+  const reservationFound = await service.read(reservationId);
+  res.status(200).json({ data: reservationFound })
+}
+
 module.exports = {
   list,
-  create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), asyncErrorBoundary(create)],
-  delete: destroy
+  create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), properFormat, asyncErrorBoundary(create)],
+  delete: destroy,
+  read,
 };

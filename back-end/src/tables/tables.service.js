@@ -11,7 +11,15 @@ async function create(newTable) {
         .returning('*');
 }
 
+async function update(table_id, reservation_id) {
+    return knex('tables')
+        .update({ reservation_id })
+        .where({ table_id })
+        .returning('*');
+}
+
 module.exports = {
     list,
-    create
+    create,
+    update,
 }

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useParams, useHistory  } from 'react-router-dom';
 import { listTables } from '../utils/api';
+import { assignReservationToTable } from '../utils/api';
 
 export default function SeatReservation() {
     const { reservation_id } = useParams();
-    console.log(reservation_id)
+    const history = useHistory();
 
     const [listOfTables, setListOfTables] = useState([]);
     const [listOfTablesError, setListOfTablesError] = useState(null);
+    const [selected, setSelected] = useState(null)
+    const [validationError, setValidationError] = useState()
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -18,13 +21,34 @@ export default function SeatReservation() {
     }, [])
 
     const listOutTables = listOfTables.map((table) => (
-        <option>{table.table_name} - {table.capacity}</option>
+        <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
     ))
 
-    return (
-        <select name='table_id'>
-            {listOutTables}
-        </select>
+    const selectHandler = (event) => {
+        // unsure if this is the best way to obtain the value of table_id
+        const tableId = document.getElementById('table_id').value;
+        setSelected(tableId);
+    }
+    
+    const submitHandler = (event) => {
+        event.preventDefault();
+        assignReservationToTable(selected, reservation_id)
+            .then(() => {
+                setSelected(null)
+                return history.push('/')
+            })
+            .catch(setValidationError)
+    }
+    console.log(selected)
 
+    return (
+        <>  
+            <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}</label>
+            <select name='table_id' id='table_id' onChange={selectHandler}>
+                {listOutTables}
+            </select>
+            <button onClick={submitHandler}>Submit</button>
+            {validationError ? validationError.message : null}
+        </>
     )
 }

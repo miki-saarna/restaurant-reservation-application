@@ -3,6 +3,7 @@
 const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const mergeSort = require('../utils/mergeSort');
+const reservationFormatValidator = require('../utils/reservationFormatValidator');
 
 /**
  * List handler for reservation resources
@@ -53,23 +54,7 @@ function hasRequiredProperties(properties) {
   }
 }
 
-function properFormat(req, res, next) {
-  const { reservation_date, reservation_time, people } = res.locals.data;
 
-  const dateArray = reservation_date.split('-');
-  dateArray[1] -= 1;
-  const reservationDate = new Date(...dateArray);
-
-  const timeArray = reservation_time.split(':');
-  const reservationTime = new Date(...timeArray);
-
-  reservationDate == "Invalid Date" ? next({ status: 400, message: `The 'reservation_date' property must be a date.`}) : null;
-
-  reservationTime == "Invalid Date" ? next({ status: 400, message: `The 'reservation_time' property must be a date.`}) : null;
-
-  typeof people === 'number' ? null : next({ status: 400, message: `The 'people' property must be a number type.`});
-  next();
-}
 
 function compareReservationsByTime(left, right) {
 
@@ -171,7 +156,7 @@ async function read(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), properFormat, asyncErrorBoundary(create)],
+  create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), reservationFormatValidator(), asyncErrorBoundary(create)],
   delete: asyncErrorBoundary(destroy),
   read,
 };

@@ -1,7 +1,6 @@
 function reservationFormatValidator() {
   return function(req, res, next) {
     const { reservation_date, reservation_time, people } = req.body.data;
-    
     try {
       const dateArray = reservation_date.split('-');
       dateArray[1] -= 1;

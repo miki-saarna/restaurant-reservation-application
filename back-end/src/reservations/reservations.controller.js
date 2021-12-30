@@ -4,12 +4,12 @@ const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const mergeSort = require('../utils/mergeSort');
 const reservationFormatValidator = require('../utils/reservationFormatValidator');
+const hasProperties = require('../errors/hasProperties');
+const compareByReservationTime = require('../utils/compareByReservationTime');
 
 /**
  * List handler for reservation resources
  */
-
-
 const REQUIRED_PROPERTIES = [
   'first_name',
   'last_name',
@@ -19,74 +19,53 @@ const REQUIRED_PROPERTIES = [
   'people'
 ]
 
-const VALID_PROPERTIES = [...REQUIRED_PROPERTIES];
+const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
-function onlyHasValidProperties(req, res, next) {
-  const { data = {} } = req.body;
+// const VALID_PROPERTIES = [...REQUIRED_PROPERTIES];
 
-  const invalidFields = Object.keys(data).filter((field) => !VALID_PROPERTIES.includes(field));
+// function onlyHasValidProperties(req, res, next) {
+//   const { data = {} } = req.body;
 
-  if(invalidFields.length) {
-    return next({
-      status: 400,
-      message: `Request body contains invalid field(s): ${invalidFields.join(', ')}.`
-    })
-  }
-  res.locals.data = data;
-  next();
-}
+//   const invalidFields = Object.keys(data).filter((field) => !VALID_PROPERTIES.includes(field));
 
-function hasRequiredProperties(properties) {
-  return function (req, res, next) {
-    const data = res.locals.data;
-    try {
-      properties.forEach((property) => {
-        if (!data[property]) {
-          const error = new Error(`A '${property}' property is required.`);
-          error.status = 400;
-          throw error;
-        }
-      });
-      next();
-    } catch (error) {
-      next(error);
-    }
-  }
-}
+//   if(invalidFields.length) {
+//     return next({
+//       status: 400,
+//       message: `Request body contains invalid field(s): ${invalidFields.join(', ')}.`
+//     })
+//   }
+//   res.locals.data = data;
+//   next();
+// }
 
 
 
-function compareReservationsByTime(left, right) {
 
-  const leftDate = left.reservation_date;
-  const [leftYear, leftMonth, leftDay] = [leftDate.getFullYear(), leftDate.getMonth(), leftDate.getDate()]
-  const leftTimeArray = left.reservation_time.split(':');
-  const leftTime = new Date(leftYear, leftMonth, leftDay, ...leftTimeArray)
 
-  const rightDate = right.reservation_date;
-  const [rightYear, rightMonth, rightDay] = [rightDate.getFullYear(), rightDate.getMonth(), rightDate.getDate()]
-  const rightTimeArray = right.reservation_time.split(':');
-  const rightTime = new Date(rightYear, rightMonth, rightDay, ...rightTimeArray)
-  
-  
-  
-  // const leftDateArray = left.reservation_date.split('-');
-  // const leftTimeArray = left.reservation_time.split(':');
-  // const leftTime = new Date(...leftDateArray, ...leftTimeArray);
-  // const rightTime = new Date(...right.reservation_date.split('-'), ...right.reservation_time.split(':'));
-  return leftTime.getTime() - rightTime.getTime();
-}
+// function compareReservationsByTime(left, right) {
+//   const leftDate = left.reservation_date;
+//   const [leftYear, leftMonth, leftDay] = [leftDate.getFullYear(), leftDate.getMonth(), leftDate.getDate()]
+//   const leftTimeArray = left.reservation_time.split(':');
+//   const leftTime = new Date(leftYear, leftMonth, leftDay, ...leftTimeArray)
+
+//   const rightDate = right.reservation_date;
+//   const [rightYear, rightMonth, rightDay] = [rightDate.getFullYear(), rightDate.getMonth(), rightDate.getDate()]
+//   const rightTimeArray = right.reservation_time.split(':');
+//   const rightTime = new Date(rightYear, rightMonth, rightDay, ...rightTimeArray)
+
+//   return leftTime.getTime() - rightTime.getTime();
+// }
 
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
     const data = await service.readByDate(date)
     // const sortedData = data.sort((reservationA, reservationB) => reservationA.reservation_time - reservationB.reservation_time);
-    const sortedData = mergeSort(compareReservationsByTime, data);
+    const sortedData = mergeSort(compareByReservationTime, data);
     res.json({ data: sortedData })
   } else {
     const data = await service.list();
-    const sortedData = mergeSort(compareReservationsByTime, data);
+    const sortedData = mergeSort(compareByReservationTime, data);
     // const sortedData = data.sort((reservationA, reservationB) => parseInt(reservationA.reservation_time.split(':')) - parseInt(reservationB.reservation_time.split(':')));
     res.json({ data: sortedData });
   }
@@ -102,7 +81,6 @@ async function create(req, res, next) {
   // get present date/time with timezone consideration
   // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
   const presentDate = new Date(presentDateUTC.getTime() - timezoneOffset);
-
 
   // separate year, month, day
   const dateArray = data.reservation_date.split('-')
@@ -156,7 +134,7 @@ async function read(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), reservationFormatValidator(), asyncErrorBoundary(create)],
+  create: [hasRequiredProperties, reservationFormatValidator(), asyncErrorBoundary(create)],
   delete: asyncErrorBoundary(destroy),
   read,
 };

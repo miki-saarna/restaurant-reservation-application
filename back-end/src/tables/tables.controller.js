@@ -3,6 +3,7 @@ const asyncErrorBoundary = require('../errors/asyncErrorBoundary')
 const hasProperties = require('../errors/hasProperties');
 const mergeSort = require('../utils/mergeSort');
 const tableFormatValidator = require('../utils/tableFormatValidator');
+const compareByTableName = require('../utils/compareByTableName');
 
 const REQUIRED_PROPERTIES = [
     'table_name',
@@ -28,9 +29,7 @@ const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
 
 
-function compareByTableName(left, right) {
-    return left.table_name.toLowerCase() < right.table_name.toLowerCase() ? -1 : 1;
-}
+
 
 async function list(req, res) {
     const data = await service.list();

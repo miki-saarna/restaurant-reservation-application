@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouteMatch, useParams, useHistory  } from 'react-router-dom';
+import { useParams, useHistory  } from 'react-router-dom';
 import { listTables } from '../utils/api';
 import { assignReservationToTable } from '../utils/api';
 
@@ -39,7 +39,11 @@ export default function SeatReservation() {
             })
             .catch(setValidationError)
     }
-    console.log(selected)
+    
+    const cancelHandler = (event) => {
+        event.preventDefault();
+        history.goBack();
+    }
 
     return (
         <>  
@@ -48,6 +52,7 @@ export default function SeatReservation() {
                 {listOutTables}
             </select>
             <button onClick={submitHandler}>Submit</button>
+            <button onClick={cancelHandler}>Cancel</button>
             {validationError ? validationError.message : null}
         </>
     )

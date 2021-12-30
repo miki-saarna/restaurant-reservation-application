@@ -34,6 +34,10 @@ async function read(table_id) {
         .then((tableFound) => tableFound[0])
 }
 
+async function destroy(table_id) {
+    
+}
+
 module.exports = {
     list,
     create,

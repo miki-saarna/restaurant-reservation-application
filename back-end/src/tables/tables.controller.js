@@ -2,6 +2,7 @@ const service = require('./tables.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary')
 const hasProperties = require('../errors/hasProperties');
 const mergeSort = require('../utils/mergeSort');
+const tableFormatValidator = require('../utils/tableFormatValidator');
 
 const REQUIRED_PROPERTIES = [
     'table_name',
@@ -25,20 +26,7 @@ const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 //     next();
 // }
 
-function tableFormatValidation(req, res, next) {
-    const { data } = req.body;
-    
-    if (data.table_name.length < 2) {
-        return next({ status: 400, message: `The 'table_name' must contain at least 2 characters.` })
-    } 
 
-    if (typeof data.capacity !== 'number') {
-        return next({ status: 400, message: `The date type of capacity should be a number.`})
-    }
-
-    next()
-    res.locals.data = data;
-}
 
 function compareByTableName(left, right) {
     return left.table_name.toLowerCase() < right.table_name.toLowerCase() ? -1 : 1;
@@ -77,6 +65,6 @@ async function update(req, res, next) {
 
 module.exports = {
     list: asyncErrorBoundary(list),
-    create: [hasRequiredProperties, tableFormatValidation, asyncErrorBoundary(create)],
+    create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
     update: asyncErrorBoundary(update),
 }

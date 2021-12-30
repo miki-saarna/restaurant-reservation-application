@@ -6,15 +6,15 @@ function reservationFormatValidator() {
       const dateArray = reservation_date.split('-');
       dateArray[1] -= 1;
       const reservationDate = new Date(...dateArray);
-    
-      const timeArray = reservation_time.split(':');
-      const reservationTime = new Date(...timeArray);
-    
+
       if (reservationDate == "Invalid Date") {
         const error = new Error(`The 'reservation_date' property must be a date.`)
         error.status = 400;
         throw error;
       } 
+
+      const timeArray = reservation_time.split(':');
+      const reservationTime = new Date(...timeArray);
     
       if (reservationTime == "Invalid Date") {
         const error = new Error(`The 'reservation_time' property must be a date.`);

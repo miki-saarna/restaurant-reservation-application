@@ -1,9 +1,9 @@
 const service = require('./tables.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary')
 const hasProperties = require('../errors/hasProperties');
-const mergeSort = require('../utils/mergeSort');
-const tableFormatValidator = require('../utils/tableFormatValidator');
-const compareByTableName = require('../utils/compareByTableName');
+const mergeSort = require('../utils/sorting/mergeSort');
+const tableFormatValidator = require('../utils/validators/tableFormatValidator');
+const { compareByTableName } = require('../utils/sorting/compare');
 
 const REQUIRED_PROPERTIES = [
     'table_name',
@@ -27,8 +27,30 @@ const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 //     next();
 // }
 
+async function tableExists(req, res, next) {
+    const { table_id } = req.params;
+    const tableFound = await service.read(table_id);
+    if (!tableFound) return next({ status: 404, message: `Cannot find table with ID: '${table_id}'`});
+    res.locals.table_id = table_id;
+    res.locals.table = tableFound;
+    next();
+}
 
+async function reservationExists(req, res, next) {
+    const { data: { reservation_id } = {} } = req.body;
+    if (!reservation_id) {
+        return next({ status: 400, message: `reservation_id field is missing.`})
+    }
 
+    const foundReservation = await service.findReservation(reservation_id);
+    if (!foundReservation) {
+        return next({ status: 404, message: `Reservation with ID '${reservation_id}' does not exist.`})
+    }
+
+    res.locals.foundReservation = foundReservation;
+    next();
+}
+    
 
 
 async function list(req, res) {
@@ -44,26 +66,21 @@ async function create(req, res) {
 }
 
 async function update(req, res, next) {
-    const { table_id } = req.params;
-    const { data: { reservation_id } } = req.body;
+    const table = res.locals.table;
+    const foundReservation = res.locals.foundReservation;
 
-    // move to validator function...
-    if (!reservation_id) {
-        return next({ status: 400, message: `reservation_id field is missing.`})
-    }
+    // checking reservation size and table capacity
+    if (foundReservation.people > table.capacity) return next({ status: 400, message: `This table's capacity of ${table.capacity} is not big enough to seat all ${foundReservation.people} guests for this reservation.`})
 
-    const foundReservation = await service.findReservation(reservation_id);
-    
-    if (!foundReservation) {
-        return next({ status: 400, message: `Reservation with ID '${reservation_id}' does not exist.`})
-    }
+    // checking if currently selected table is occupied
+    if (table.reservation_id) return next({ status: 400, message: `This table is currently occupied.`})
 
-    const tableAssignedToReservation = await service.update(table_id, reservation_id)
+    const tableAssignedToReservation = await service.update(table.table_id, foundReservation.reservation_id)
     res.json({ data: tableAssignedToReservation })
 }
 
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
-    update: asyncErrorBoundary(update),
+    update: [tableExists, reservationExists, asyncErrorBoundary(update)],
 }

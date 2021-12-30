@@ -2,10 +2,10 @@
 // const { next } = require('../../../front-end/src/utils/date-time');
 const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
-const mergeSort = require('../utils/mergeSort');
-const reservationFormatValidator = require('../utils/reservationFormatValidator');
+const mergeSort = require('../utils/sorting/mergeSort');
+const reservationFormatValidator = require('../utils/validators/reservationFormatValidator');
 const hasProperties = require('../errors/hasProperties');
-const compareByReservationTime = require('../utils/compareByReservationTime');
+const { compareByReservationTime } = require('../utils/sorting/compare');
 const reservationBodyValidator = require('../utils/validators/reservationBodyValidator');
 
 /**

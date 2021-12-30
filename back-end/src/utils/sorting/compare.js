@@ -12,4 +12,11 @@ function compareByReservationTime(left, right) {
     return leftTime.getTime() - rightTime.getTime();
   }
 
-module.exports = compareByReservationTime;
+function compareByTableName(left, right) {
+  return left.table_name.toLowerCase() < right.table_name.toLowerCase() ? -1 : 1;
+}
+
+module.exports = {
+  compareByReservationTime,
+  compareByTableName,
+}

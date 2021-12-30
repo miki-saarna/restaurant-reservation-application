@@ -19,8 +19,16 @@ async function update(table_id, reservation_id) {
         .returning('*');
 }
 
+async function findReservation(reservation_id) {
+    return knex('reservations')
+        .select('*')
+        .where({ reservation_id })
+        .then(reservationFound => reservationFound[0])
+}
+
 module.exports = {
     list,
     create,
     update,
+    findReservation,
 }

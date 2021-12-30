@@ -2,6 +2,7 @@
 // const { next } = require('../../../front-end/src/utils/date-time');
 const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
+const mergeSort = require('../utils/mergeSort');
 
 /**
  * List handler for reservation resources
@@ -70,18 +71,42 @@ function properFormat(req, res, next) {
   next();
 }
 
+function compareReservationsByTime(left, right) {
+
+  const leftDate = left.reservation_date;
+  const [leftYear, leftMonth, leftDay] = [leftDate.getFullYear(), leftDate.getMonth(), leftDate.getDate()]
+  const leftTimeArray = left.reservation_time.split(':');
+  const leftTime = new Date(leftYear, leftMonth, leftDay, ...leftTimeArray)
+
+  const rightDate = right.reservation_date;
+  const [rightYear, rightMonth, rightDay] = [rightDate.getFullYear(), rightDate.getMonth(), rightDate.getDate()]
+  const rightTimeArray = right.reservation_time.split(':');
+  const rightTime = new Date(rightYear, rightMonth, rightDay, ...rightTimeArray)
+  
+  
+  
+  // const leftDateArray = left.reservation_date.split('-');
+  // const leftTimeArray = left.reservation_time.split(':');
+  // const leftTime = new Date(...leftDateArray, ...leftTimeArray);
+  // const rightTime = new Date(...right.reservation_date.split('-'), ...right.reservation_time.split(':'));
+  return leftTime.getTime() - rightTime.getTime();
+}
+
 async function list(req, res) {
   const { date } = req.query;
   if (date) {
     const data = await service.readByDate(date)
-    const sortedData = data.sort((reservationA, reservationB) => reservationA.reservation_time - reservationB.reservation_time);
+    // const sortedData = data.sort((reservationA, reservationB) => reservationA.reservation_time - reservationB.reservation_time);
+    const sortedData = mergeSort(compareReservationsByTime, data);
     res.json({ data: sortedData })
   } else {
     const data = await service.list();
-    const sortedData = data.sort((reservationA, reservationB) => parseInt(reservationA.reservation_time.split(':')) - parseInt(reservationB.reservation_time.split(':')));
+    const sortedData = mergeSort(compareReservationsByTime, data);
+    // const sortedData = data.sort((reservationA, reservationB) => parseInt(reservationA.reservation_time.split(':')) - parseInt(reservationB.reservation_time.split(':')));
     res.json({ data: sortedData });
   }
 }
+
 
 async function create(req, res, next) {
   const data = res.locals.data;
@@ -137,15 +162,16 @@ async function destroy(req, res) {
   res.sendStatus(204);
 }
 
-async function read(req, res) {
+async function read(req, res, next) {
   const reservationId = parseInt(req.params.reservationId);
   const reservationFound = await service.read(reservationId);
+  if (!reservationFound) return next({ status: 404, message: `Cannot find reservation with ID ${reservationId}.` })
   res.status(200).json({ data: reservationFound })
 }
 
 module.exports = {
-  list,
+  list: asyncErrorBoundary(list),
   create: [onlyHasValidProperties, hasRequiredProperties(REQUIRED_PROPERTIES), properFormat, asyncErrorBoundary(create)],
-  delete: destroy,
+  delete: asyncErrorBoundary(destroy),
   read,
 };

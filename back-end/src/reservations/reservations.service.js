@@ -25,10 +25,19 @@ async function destroy(id) {
         .where('reservation_id', id)
 }
 
+async function updateStatus(reservation_id, status) {
+    return knex('reservations')
+        .update({ status })
+        .where({ reservation_id })
+        .returning('*')
+        .then(updatedReservation => updatedReservation[0])
+}
+
 module.exports = {
     list,
     readByDate,
     create,
     destroy,
     read,
+    updateStatus
 }

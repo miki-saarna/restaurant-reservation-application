@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory  } from 'react-router-dom';
 import { listTables } from '../utils/api';
-import { assignReservationToTable } from '../utils/api';
+import { assignReservationToTable, updateStatusOfReservation } from '../utils/api';
 
 export default function SeatReservation() {
     const { reservation_id } = useParams();
@@ -35,8 +35,12 @@ export default function SeatReservation() {
         event.preventDefault();
         assignReservationToTable(selected, reservation_id)
             .then(() => {
-                setSelected(null)
-                return history.push('/')
+                updateStatusOfReservation(reservation_id, 'seated');
+                    // since not returning anything, I don't need to return the promise do I?
+                    // .then(() => {
+                    setSelected(null)
+                    return history.push('/')
+                    // })
             })
             .catch(setValidationError)
     }

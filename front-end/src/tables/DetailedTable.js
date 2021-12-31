@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { deleteSeatAssignment } from '../utils/api';
+import { deleteSeatAssignment, updateStatusOfReservation } from '../utils/api';
 
 // export default function DetailedTable({ table }) {
-    export default function DetailedTable({ table: {table_id, table_name, capacity, reservation_id = null} }) {
+    export default function DetailedTable({ table: {table_id, table_name, capacity, reservation_id = null}, setTableFinished }) {
 
         const [isReserved, setIsReserved] = useState(() => reservation_id ? true : false);
         
@@ -11,8 +11,10 @@ import { deleteSeatAssignment } from '../utils/api';
         const handleFinish = (event) => {
             event.preventDefault();
             if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
-                deleteSeatAssignment(table_id)
+                deleteSeatAssignment(table_id);
+                updateStatusOfReservation(reservation_id, 'finished');
                 setIsReserved(false);
+                setTableFinished((currentStatus) => !currentStatus)
             }
         }
             

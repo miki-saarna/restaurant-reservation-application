@@ -32,8 +32,11 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   // add error below into body
   const [tablesError, setTablesError] = useState([]);
+  // used to re-render list of reservations that are displayed
+  const [tableFinished, setTableFinished] = useState(false);
 
-  useEffect(loadDashboard, [date]);
+  // seems like tableFinished dependency isn't working
+  useEffect(loadDashboard, [date, tableFinished]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -47,12 +50,19 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  const listOfReservations = reservations.map((reservation) => (
+  // above useEffect not updating???
+  useEffect(() => {
+    listReservations({ date })
+      .then(setReservations)
+      .catch(setReservationsError);
+  }, [tableFinished])
+
+  const listOfReservations = reservations.filter((reservation) => reservation.status !== 'finished').map((reservation) => (
     <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
   ))
 
   const TablesList = tables.map((table) => (
-     <DetailedTable key={table.table_id} table={table} />
+     <DetailedTable key={table.table_id} table={table} setTableFinished={setTableFinished} />
   ))
 
   return (

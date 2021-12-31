@@ -9,7 +9,8 @@ export default function DetailedReservation({ reservation }) {
         mobile_number,
         reservation_date,
         reservation_time,
-        people
+        people,
+        status,
     } = reservation;
 
     return (
@@ -35,8 +36,11 @@ export default function DetailedReservation({ reservation }) {
             <li>
                 People: {people}
             </li>
+            <li data-reservation-id-status={reservation.reservation_id}>
+                Status: {status}
+            </li>
             {/* can I remove the button below? Or do the tests rely on it? */}
-            <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button>
+            {status === 'booked' ? <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button> : null}
         </ul>
     )
 }

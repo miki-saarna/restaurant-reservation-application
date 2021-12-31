@@ -86,9 +86,18 @@ async function read(req, res, next) {
   res.status(200).json({ data: res.locals.reservationFound })
 }
 
+async function updateStatus(req, res, next) {
+  const reservation_id = res.locals.reservationId;
+  const { status } = req.body.data;
+  console.log(status)
+  const data = await service.updateStatus(reservation_id, status);
+  res.json({ data })
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [hasRequiredProperties, reservationFormatValidator(), reservationBodyValidator(), asyncErrorBoundary(create)],
   delete: [reservationExists, asyncErrorBoundary(destroy)],
-  read: [reservationExists, read]
+  read: [reservationExists, read],
+  update: [reservationExists, asyncErrorBoundary(updateStatus)],
 };

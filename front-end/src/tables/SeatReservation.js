@@ -20,11 +20,12 @@ export default function SeatReservation() {
         return () => abortController.abort();
     }, [])
 
-    const listOutTables = listOfTables.map((table) => (
+    // using filter to only list out tables if they are not currently occupied
+    const listOutTables = listOfTables.filter((table) => !table.reservation_id).map((table) => (
         <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
     ))
 
-    const selectHandler = (event) => {
+    const selectHandler = () => {
         // unsure if this is the best way to obtain the value of table_id
         const tableId = document.getElementById('table_id').value;
         setSelected(tableId);
@@ -47,7 +48,8 @@ export default function SeatReservation() {
 
     return (
         <>  
-            <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}</label>
+            <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}. </label>
+            Table number:
             <select name='table_id' id='table_id' onChange={selectHandler}>
                 {listOutTables}
             </select>

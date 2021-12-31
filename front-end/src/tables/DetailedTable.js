@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { deleteSeatAssignment } from '../utils/api';
 
 // export default function DetailedTable({ table }) {
     export default function DetailedTable({ table: {table_id, table_name, capacity, reservation_id = null} }) {
 
+        const [isReserved, setIsReserved] = useState(() => reservation_id ? true : false);
+        
+        // how to properly implement useEffect since there's an API call...
+        // do I need to useState with another variable?
         const handleFinish = (event) => {
             event.preventDefault();
-
             if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
                 deleteSeatAssignment(table_id)
+                setIsReserved(false);
             }
         }
-
+            
     return (
         <>
             <ul className='table'>
@@ -26,9 +30,9 @@ import { deleteSeatAssignment } from '../utils/api';
                 </li>
                 <li>
                     {/* unsure if the below attribute is correct... needed for tests */}
-                    <h4 data-table-id-status={table_id}>{reservation_id ? 'Occupied' : 'Free'}</h4>
+                    <h4 data-table-id-status={table_id}>{isReserved ? 'Occupied' : 'Free'}</h4>
                 </li>
-                <button data-table-id-status={table_id} onClick={handleFinish}>Finish</button>
+                {isReserved ? <button data-table-id-status={table_id} onClick={handleFinish}>Finish</button> : null}
             </ul>
         </>
     )

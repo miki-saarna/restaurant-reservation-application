@@ -57,11 +57,6 @@ async function destroy(table_id) {
     
 }
 
-async function join() {
-    return knex("tables as t")
-        .join("reservations as r", "t.reservation_id", "r.reservation_id")
-        .select("t.*", "r.*");
-}
 
 module.exports = {
     list,
@@ -70,6 +65,5 @@ module.exports = {
     findReservation,
     read,
     destroy,
-    join,
     unseat
 }

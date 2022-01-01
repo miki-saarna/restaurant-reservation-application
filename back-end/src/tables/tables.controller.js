@@ -92,10 +92,6 @@ async function update(req, res, next) {
     res.json({ data: tableAssignedToReservation })
 }
 
-async function join(req, res, next) {
-    const data = await service.join();
-    res.json({ data })
-}
 
 async function unseat(req, res, next) {
     const table_id = res.locals.table.table_id;
@@ -109,5 +105,4 @@ module.exports = {
     create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
     update: [tableExists, reservationExists, reservationNotSeated, asyncErrorBoundary(update)],
     unseat: [tableExists, tableIsOccupied, unseat],
-    join,
 }

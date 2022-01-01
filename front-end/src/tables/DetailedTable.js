@@ -12,7 +12,6 @@ import { deleteSeatAssignment, updateStatusOfReservation } from '../utils/api';
             event.preventDefault();
             if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
                 deleteSeatAssignment(table_id);
-                // updateStatusOfReservation(reservation_id, 'finished');
                 setIsReserved(false);
                 setTableFinished((currentStatus) => !currentStatus)
             }

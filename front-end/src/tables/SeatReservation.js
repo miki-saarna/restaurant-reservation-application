@@ -7,23 +7,31 @@ export default function SeatReservation() {
     const { reservation_id } = useParams();
     const history = useHistory();
 
-    const [listOfTables, setListOfTables] = useState([]);
-    const [listOfTablesError, setListOfTablesError] = useState(null);
-    const [selected, setSelected] = useState(null)
+    const [mapOfTables, setMapOfTables] = useState([]);
+    const [mapOfTablesError, setMapOfTablesError] = useState(null);
+    const [selected, setSelected] = useState(null);
     const [validationError, setValidationError] = useState()
 
-    useEffect(() => {
-        const abortController = new AbortController();
-        listTables(abortController.signal)
-            .then(setListOfTables)
-            .catch(setListOfTables)
-        return () => abortController.abort();
-    }, [])
 
-    // using filter to only list out tables if they are not currently occupied
-    const listOutTables = listOfTables.filter((table) => !table.reservation_id).map((table) => (
-        <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
-    ))
+    useEffect(loadTables, []);
+
+    async function loadTables() {
+        const abortController = new AbortController();
+        try {
+            const tables = await listTables(abortController.signal);
+            const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => (
+                <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
+            ))
+            setMapOfTables(listOutTables);
+            // maybe not the best solution to use key?
+            setSelected(listOutTables[0].key)
+        } catch (error) {
+            setMapOfTablesError(error);
+        }
+        return () => abortController.abort();
+    }
+
+    console.log(mapOfTables)
 
     const selectHandler = () => {
         // unsure if this is the best way to obtain the value of table_id
@@ -35,13 +43,8 @@ export default function SeatReservation() {
         event.preventDefault();
         assignReservationToTable(selected, reservation_id)
             .then(() => {
-                // not necessary below?
-                // updateStatusOfReservation(reservation_id, 'seated');
-                    // since not returning anything, I don't need to return the promise do I?
-                    // .then(() => {
-                    setSelected(null)
-                    return history.push('/')
-                    // })
+                setSelected(null)
+                return history.push('/')
             })
             .catch(setValidationError)
     }
@@ -56,7 +59,7 @@ export default function SeatReservation() {
             <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}. </label>
             Table number:
             <select name='table_id' id='table_id' onChange={selectHandler}>
-                {listOutTables}
+                {mapOfTables}
             </select>
             <button onClick={submitHandler}>Submit</button>
             <button onClick={cancelHandler}>Cancel</button>

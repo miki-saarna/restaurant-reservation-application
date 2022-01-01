@@ -6,6 +6,6 @@ router.route('/').get(controller.list).post(controller.create).all(methodNotAllo
 router.route('/:table_id/seat').put(controller.update).delete(controller.unseat).all(methodNotAllowed);
 
 // I can literally use any HTTP method...
-// router.route('/join').put(controller.join).all(methodNotAllowed);
+// router.route('/join').delete(controller.join).all(methodNotAllowed);
 
 module.exports = router;

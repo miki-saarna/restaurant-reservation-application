@@ -39,27 +39,47 @@ function Dashboard({ date }) {
   useEffect(loadDashboard, [date, tableFinished]);
 
   function loadDashboard() {
+    // console.log(date)
+    // console.log(tableFinished)
+    
     const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    listTables(abortController.signal)
-      .then(setTables)
-      .catch(setTablesError);
+    // setReservationsError(null);
+    // listReservations({ date }, abortController.signal)
+    //   .then((data) => {
+    //     console.log("list reservation:", data)
+    //     setReservations(data)
+    //   })
+    //   .catch(setReservationsError);
+    // listTables(abortController.signal)
+    //   .then(data => {
+    //     console.log("list tables:", data)
+    //     setTables(data)
+    //   })
+    //   .catch(setTablesError);
+    
+    Promise.all([listReservations({ date }, abortController.signal), listTables(abortController.signal)])
+      .then((response) => {
+        setReservations(response[0])
+        setTables(response[1])
+      })
+      .catch(console.error);
     return () => abortController.abort();
   }
 
   // above useEffect not updating???
-  useEffect(() => {
-    listReservations({ date })
-      .then(setReservations)
-      .catch(setReservationsError);
-  }, [tableFinished])
+  // useEffect(() => {
+    // const abortController = new AbortController();
 
-  const listOfReservations = reservations.filter((reservation) => reservation.status !== 'finished').map((reservation) => (
-    <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
-  ))
+    // listReservations({ date })
+    //   .then(setReservations)
+    //   .catch(setReservationsError);
+    // return () => abortController.abort();
+
+  // }, [tableFinished])
+    const listOfReservations = reservations.filter((reservation) => reservation.status !== 'finished').map((reservation) => (
+      <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
+      ))
+    
 
   const TablesList = tables.map((table) => (
      <DetailedTable key={table.table_id} table={table} setTableFinished={setTableFinished} />

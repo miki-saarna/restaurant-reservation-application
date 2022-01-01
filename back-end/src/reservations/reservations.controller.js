@@ -87,10 +87,22 @@ async function read(req, res, next) {
 }
 
 async function updateStatus(req, res, next) {
-  const reservation_id = res.locals.reservationId;
-  const { status } = req.body.data;
-  console.log(status)
-  const data = await service.updateStatus(reservation_id, status);
+  const { reservation_id, status } = res.locals.reservationFound;
+  
+  // const reservation_id = res.locals.reservationId;
+  const newStatus = req.body.data.status;
+  
+  
+
+  if (!['seated', 'booked', 'finished'].includes(newStatus)) {
+    return next({ status: 400, message: `Cannot update an unknown status.`});
+  }
+
+  if (status === 'finished') {
+    return next({ status: 400, message: `Cannot update a status that is already "finished".`});
+  }
+
+  const data = await service.updateStatus(reservation_id, newStatus);
   res.json({ data })
 }
 

@@ -35,7 +35,8 @@ export default function SeatReservation() {
         event.preventDefault();
         assignReservationToTable(selected, reservation_id)
             .then(() => {
-                updateStatusOfReservation(reservation_id, 'seated');
+                // not necessary below?
+                // updateStatusOfReservation(reservation_id, 'seated');
                     // since not returning anything, I don't need to return the promise do I?
                     // .then(() => {
                     setSelected(null)

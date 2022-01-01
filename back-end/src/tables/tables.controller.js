@@ -50,10 +50,19 @@ async function reservationExists(req, res, next) {
     res.locals.foundReservation = foundReservation;
     next();
 }
+
+async function reservationNotSeated(req, res, next) {
+    const foundReservation = res.locals.foundReservation;
+    if (foundReservation.status === 'seated') {
+        return next({ status: 400, message: `Cannot seat a reservations that is already seated.`})
+    } 
+    next();
+}
     
 async function tableIsOccupied(req, res, next) {
     const table = res.locals.table;
     if (!table.reservation_id) return next({ status: 400, message: `Cannot unseat a table that is not occupied.`});
+    res.locals.reservation_id = table.reservation_id
     next();
 }
 
@@ -90,14 +99,15 @@ async function join(req, res, next) {
 
 async function unseat(req, res, next) {
     const table_id = res.locals.table.table_id;
-    const data = await service.unseat(table_id);
-    res.json({ data })
+    const reservation_id = res.locals.reservation_id;
+    await service.unseat(table_id, reservation_id);
+    res.sendStatus(204);
 }
 
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
-    update: [tableExists, reservationExists, asyncErrorBoundary(update)],
+    update: [tableExists, reservationExists, reservationNotSeated, asyncErrorBoundary(update)],
     unseat: [tableExists, tableIsOccupied, unseat],
     join,
 }

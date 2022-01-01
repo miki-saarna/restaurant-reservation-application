@@ -32,7 +32,6 @@ headers.append("Content-Type", "application/json");
 async function fetchJson(url, options, onCancel) {
   try {
     const response = await fetch(url, options);
-    
     if (response.status === 204) {
       return null;
     }
@@ -123,6 +122,7 @@ export async function deleteSeatAssignment(table_id, signal) {
     method: "DELETE",
     headers,
     body: null,
+    // body: JSON.stringify({ data: { reservation_id } }),
     signal,
   }
   return await fetchJson(url, options, {});

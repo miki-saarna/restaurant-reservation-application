@@ -1,6 +1,6 @@
 function reservationFormatValidator() {
   return function(req, res, next) {
-    const { reservation_date, reservation_time, people } = req.body.data;
+    const { reservation_date, reservation_time, people, status } = req.body.data;
     try {
       const dateArray = reservation_date.split('-');
       dateArray[1] -= 1;
@@ -26,6 +26,12 @@ function reservationFormatValidator() {
         error.status = 400;
         throw error;
       } 
+
+      if (status === 'seated' || status === 'finished') {
+        const error = new Error(`Upon creation, status of a reservation must be "booked" instead of "seated" or "finished".`)
+        error.status = 400;
+        throw error;
+      }
       next();
     } catch(error) {
       next(error)

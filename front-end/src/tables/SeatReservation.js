@@ -31,8 +31,6 @@ export default function SeatReservation() {
         return () => abortController.abort();
     }
 
-    console.log(mapOfTables)
-
     const selectHandler = () => {
         // unsure if this is the best way to obtain the value of table_id
         const tableId = document.getElementById('table_id').value;

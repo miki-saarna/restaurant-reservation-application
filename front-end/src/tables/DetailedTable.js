@@ -33,7 +33,7 @@ import { deleteSeatAssignment, updateStatusOfReservation } from '../utils/api';
                     {/* unsure if the below attribute is correct... needed for tests */}
                     <h4 data-table-id-status={table_id}>{isReserved ? 'Occupied' : 'Free'}</h4>
                 </li>
-                {isReserved ? <button data-table-id-status={table_id} onClick={handleFinish}>Finish</button> : null}
+                {isReserved ? <button data-table-id-finished={table_id} onClick={handleFinish}>Finish</button> : null}
             </ul>
         </>
     )

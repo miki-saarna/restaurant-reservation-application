@@ -35,7 +35,7 @@ async function fetchJson(url, options, onCancel) {
     if (response.status === 204) {
       return null;
     }
-
+    
     const payload = await response.json();
     
     if (payload.error) {
@@ -121,6 +121,7 @@ export async function deleteSeatAssignment(table_id, signal) {
   const options = {
     method: "DELETE",
     headers,
+    // do I just do null???
     body: null,
     // body: JSON.stringify({ data: { reservation_id } }),
     signal,

@@ -96,8 +96,10 @@ async function update(req, res, next) {
 async function unseat(req, res, next) {
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation_id;
-    await service.unseat(table_id, reservation_id);
-    res.sendStatus(204);
+    const data = await service.unseat(table_id, reservation_id);
+    // error occures if not responding with data... initially used status code 204, but tests fail...
+    // res.sendStatus(200);
+    res.json({ data })
 }
 
 module.exports = {

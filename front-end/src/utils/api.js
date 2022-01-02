@@ -106,15 +106,16 @@ export async function assignReservationToTable(table_id, reservation_id, signal)
 }
 
 // export async function updateStatusOfReservation(reservation_id, status, signal) {
-//   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
-//   const options = {
-//     method: "PUT",
-//     headers,
-//     body: JSON.stringify({ data: { status: status } }),
-//     signal,
-//   }
-//   return await fetchJson(url, options, {});
-// }
+export async function updateReservationStatus(reservation_id, status, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { status: status } }),
+    signal,
+  }
+  return await fetchJson(url, options, {});
+}
 
 export async function deleteSeatAssignment(table_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
@@ -127,4 +128,15 @@ export async function deleteSeatAssignment(table_id, signal) {
     signal,
   }
   return await fetchJson(url, options, {});
+}
+
+export async function editReservation(reservation, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation.reservation_id}`)
+  const options = {
+    method: "PUT",
+    headers,
+    body:JSON.stringify({ data: reservation }),
+    signal,
+  }
+  return await fetchJson(url, options, {})
 }

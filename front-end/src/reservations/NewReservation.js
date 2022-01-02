@@ -101,6 +101,7 @@ export default function NewReservation() {
                 required
                 onChange={changeHandler}
                 value={formData.mobile_number}
+                // change to text type?
                 type='number'
                 >
             </input>

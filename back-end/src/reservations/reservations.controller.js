@@ -59,8 +59,11 @@ async function reservationExists(req, res, next) {
 
 
 async function list(req, res) {
-  const { date, mobile_number } = req.query;
-  if (date) {
+  const { reservation_id, date, mobile_number } = req.query;
+  if (reservation_id) {
+    const data = await service.readByReservationId(reservation_id)
+    res.json({ data })
+  } else if (date) {
     const data = await service.readByDate(date)
     // instead of using mergeSort, can simply use SortBy within service file...
     const sortedData = mergeSort(compareByReservationTime, data);
@@ -77,8 +80,14 @@ async function list(req, res) {
 
 async function create(req, res, next) {
   const { data } = req.body;
-  newReservation = await service.create(data);
+  const newReservation = await service.create(data);
   res.status(201).json({ data: newReservation })
+}
+
+async function edit(req, res, next) {
+  const { data } = req.body;
+  const edittedReservation = await service.edit(data)
+  res.json({ data: edittedReservation})
 }
 
 async function destroy(req, res) {
@@ -95,11 +104,8 @@ async function updateStatus(req, res, next) {
   
   // const reservation_id = res.locals.reservationId;
   const newStatus = req.body.data.status;
-  
-  
-
-  if (!['seated', 'booked', 'finished'].includes(newStatus)) {
-    return next({ status: 400, message: `Cannot update an unknown status.`});
+  if (!['seated', 'booked', 'finished', 'cancelled'].includes(newStatus)) {
+    return next({ status: 400, message: `Cannot update to an unknown status.`});
   }
 
   if (status === 'finished') {
@@ -110,10 +116,12 @@ async function updateStatus(req, res, next) {
   res.json({ data })
 }
 
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [hasRequiredProperties, reservationFormatValidator(), reservationBodyValidator(), asyncErrorBoundary(create)],
   delete: [reservationExists, asyncErrorBoundary(destroy)],
   read: [reservationExists, read],
   update: [reservationExists, asyncErrorBoundary(updateStatus)],
+  edit: [reservationExists, hasRequiredProperties, reservationFormatValidator(), reservationBodyValidator(), asyncErrorBoundary(edit)],
 };

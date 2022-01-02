@@ -17,6 +17,13 @@ async function readByNumber(mobile_number) {
         .orderBy("reservation_date")
 }
 
+async function readByReservationId(reservation_id) {
+    return knex('reservations')
+        .where({ reservation_id })
+        .returning('*')
+        .then(foundReservation => foundReservation[0])
+}
+
 async function read(reservation_id) {
     return knex('reservations').select('*').where({ reservation_id }).then((foundReservation) => foundReservation[0])
 }
@@ -42,6 +49,14 @@ async function updateStatus(reservation_id, status) {
         .then(updatedReservation => updatedReservation[0])
 }
 
+async function edit(edittedReservation) {
+    return knex('reservations')
+        .update(edittedReservation, '*')
+        .where('reservation_id', edittedReservation.reservation_id)
+        .then((editted) => editted[0])
+
+}
+
 module.exports = {
     list,
     readByDate,
@@ -50,4 +65,6 @@ module.exports = {
     read,
     updateStatus,
     readByNumber,
+    readByReservationId,
+    edit
 }

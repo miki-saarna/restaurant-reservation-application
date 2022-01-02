@@ -11,9 +11,12 @@ import { deleteSeatAssignment, updateStatusOfReservation } from '../utils/api';
         const handleFinish = (event) => {
             event.preventDefault();
             if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
-                deleteSeatAssignment(table_id);
-                setIsReserved(false);
-                setTableFinished((currentStatus) => !currentStatus)
+                // use Promise.resolve below or make async/await???
+                Promise.resolve(deleteSeatAssignment(table_id))
+                    .then(() => {
+                        setTableFinished(currentStatus => !currentStatus)
+                        setIsReserved(false)
+                    })
             }
         }
             

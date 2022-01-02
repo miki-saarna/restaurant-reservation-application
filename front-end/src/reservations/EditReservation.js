@@ -29,9 +29,9 @@ export default function EditReservation() {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        editReservation(reservation)
-        // do something here???
-        return history.goBack();
+        Promise.resolve(editReservation(reservation))
+            .then(() => history.goBack())
+        
     }
 
     const cancelHandler = (event) => {

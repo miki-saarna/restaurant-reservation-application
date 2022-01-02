@@ -34,6 +34,7 @@ function Dashboard({ date }) {
   const [tablesError, setTablesError] = useState([]);
   // used to re-render list of reservations that are displayed
   const [tableFinished, setTableFinished] = useState(false);
+  const [mapped, setMapped] = useState([]);
 
   // seems like tableFinished dependency isn't working
   useEffect(loadDashboard, [date, tableFinished]);
@@ -58,13 +59,31 @@ function Dashboard({ date }) {
     //   .catch(setTablesError);
     
     Promise.all([listReservations({ date }, abortController.signal), listTables(abortController.signal)])
-      .then((response) => {
-        setReservations(response[0])
-        setTables(response[1])
+    .then((response) => {
+      const listOfReservations = response[0].filter((reservation) => !['finished', 'cancelled'].includes(reservation.status)).map((reservation) => (
+        <DetailedReservation key={reservation.reservation_id} reservation={reservation} setTableFinished={setTableFinished} />
+        ))
+        setMapped(listOfReservations);
+        
+        
+        // setReservations(response[0])
+        const tablesList = response[1].map((table) => (
+          <DetailedTable key={table.table_id} table={table} setTableFinished={setTableFinished} />
+          ))
+          
+          setTables(tablesList)
       })
       .catch(console.error);
     return () => abortController.abort();
   }
+
+  // useEffect(() => {
+  //   console.log(mapped)
+  // }, [tables])
+
+  // const listOfReservations = reservations.filter((reservation) => !['finished', 'cancelled'].includes(reservation.status)).map((reservation) => (
+  //   <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
+  //   ))
 
   // above useEffect not updating???
   // useEffect(() => {
@@ -76,14 +95,12 @@ function Dashboard({ date }) {
     // return () => abortController.abort();
 
   // }, [tableFinished])
-    const listOfReservations = reservations.filter((reservation) => reservation.status !== 'finished').map((reservation) => (
-      <DetailedReservation key={reservation.reservation_id} reservation={reservation} />
-      ))
-    
 
-  const TablesList = tables.map((table) => (
-     <DetailedTable key={table.table_id} table={table} setTableFinished={setTableFinished} />
-  ))
+  
+
+  // const TablesList = tables.map((table) => (
+  //    <DetailedTable key={table.table_id} table={table} setTableFinished={setTableFinished} />
+  // ))
 
   return (
     <main>
@@ -94,11 +111,12 @@ function Dashboard({ date }) {
       <ErrorAlert error={reservationsError} />
       <div className='table'>
         <p>Today's reservations:</p>
-        {reservations.length ? listOfReservations : null}
+        {/* {reservations.length ? listOfReservations : null} */}
+        {mapped.length ? mapped : null}
       </div>
       <div className='table'>
       <p>Tables:</p>
-        {tables.length ? TablesList : null}
+        {tables.length ? tables : null}
       </div>
     </main>
   );

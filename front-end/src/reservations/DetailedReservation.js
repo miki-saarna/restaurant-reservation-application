@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { updateReservationStatus } from '../utils/api';
 
-export default function DetailedReservation({ reservation }) {
+export default function DetailedReservation({ reservation, setTableFinished }) {
     const {
         reservation_id,
         first_name,
@@ -17,7 +17,8 @@ export default function DetailedReservation({ reservation }) {
     const cancelHandler = (event) => {
         event.preventDefault();
         if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
-            updateReservationStatus(reservation_id, 'cancelled')
+            Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
+                .then(() => setTableFinished(currentStatus => !currentStatus));
         }
     }
 
@@ -49,9 +50,14 @@ export default function DetailedReservation({ reservation }) {
             </li>
             {/* can I remove the button below? Or do the tests rely on it? */}
             {/* below validation required? */}
-            {status === 'booked' ? <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button> : null}
-            {<button><Link to={`/reservations/${reservation_id}/edit`}>Edit</Link></button>}
-            {<button data-reservation-id-cancel={reservation_id} onClick={cancelHandler}>Cancel</button>}
+            {status === 'booked'
+                ?
+                <>
+                    <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button>
+                    <button><Link to={`/reservations/${reservation_id}/edit`}>Edit</Link></button>
+                    <button data-reservation-id-cancel={reservation_id} onClick={cancelHandler}>Cancel</button>
+                </>
+                : null}
         </ul>
     )
 }

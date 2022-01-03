@@ -68,8 +68,9 @@ async function tableIsOccupied(req, res, next) {
 
 async function list(req, res) {
     const data = await service.list();
-    const sortedData = mergeSort(compareByTableName, data);
-    res.json({ data: sortedData })
+    // below not needed...
+    // const sortedData = mergeSort(compareByTableName, data);
+    res.json({ data: data })
 }
 
 async function create(req, res) {
@@ -93,7 +94,7 @@ async function update(req, res, next) {
 }
 
 
-async function unseat(req, res, next) {
+async function unseat(req, res) {
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation_id;
     const data = await service.unseat(table_id, reservation_id);
@@ -105,6 +106,6 @@ async function unseat(req, res, next) {
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
-    update: [tableExists, reservationExists, reservationNotSeated, asyncErrorBoundary(update)],
-    unseat: [tableExists, tableIsOccupied, unseat],
+    update: [asyncErrorBoundary(tableExists), asyncErrorBoundary(reservationExists), reservationNotSeated, asyncErrorBoundary(update)],
+    unseat: [asyncErrorBoundary(tableExists), tableIsOccupied, asyncErrorBoundary(unseat)],
 }

@@ -63,7 +63,7 @@ export default function SeatReservation() {
             </select>
             <button onClick={submitHandler}>Submit</button>
             <button onClick={cancelHandler}>Cancel</button>
-            {tableOptionsError ? <ErrorAlert error={tableOptionsError} /> : null}
+            {tableOptionsError.length ? <ErrorAlert error={tableOptionsError} /> : null}
             {validationError ? <ErrorAlert error={validationError} /> : null}
         </>
     )

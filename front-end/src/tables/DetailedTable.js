@@ -12,7 +12,8 @@ export default function DetailedTable({ table, setUpdateReservation }) {
     const handleFinish = (event) => {
         event.preventDefault();
         if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
-            Promise.resolve(deleteSeatAssignment(table_id))
+            // Promise.resolve(deleteSeatAssignment(table_id))
+            deleteSeatAssignment(table_id)
                 .then(() => {
                     setUpdateReservation(currentStatus => !currentStatus)
                     setIsReserved(false)

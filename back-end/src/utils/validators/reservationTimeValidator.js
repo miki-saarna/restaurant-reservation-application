@@ -1,4 +1,4 @@
-function reservationBodyValidator() {
+function reservationTimeValidator() {
     return function(req, res, next) {
         const { data } = req.body;
         // console.log(data)
@@ -45,4 +45,4 @@ function reservationBodyValidator() {
     }
 }
 
-module.exports = reservationBodyValidator;
+module.exports = reservationTimeValidator;

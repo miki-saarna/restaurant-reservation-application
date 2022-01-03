@@ -1,7 +1,10 @@
 const knex = require('../db/connection');
 
 async function list() {
-    return knex('reservations').select('*');
+    return knex('reservations')
+        .select('*')
+        // .orderBy("reservation_date")
+        // .orderBy("reservation_time")
 }
 
 async function readByDate(date) {
@@ -29,7 +32,10 @@ async function readByReservationId(reservation_id) {
 }
 
 async function read(reservation_id) {
-    return knex('reservations').select('*').where({ reservation_id }).then((foundReservation) => foundReservation[0])
+    return knex('reservations')
+        .select('*')
+        .where({ reservation_id })
+        .then((foundReservation) => foundReservation[0])
 }
 
 async function create(newReservation) {
@@ -64,11 +70,11 @@ async function edit(edittedReservation) {
 module.exports = {
     list,
     readByDate,
-    create,
-    destroy,
-    read,
-    updateStatus,
     readByNumber,
     readByReservationId,
+    read,
+    create,
+    destroy,
+    updateStatus,
     edit
 }

@@ -21,7 +21,8 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
     const cancelHandler = (event) => {
         event.preventDefault();
         if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
-            Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
+            updateReservationStatus(reservation_id, 'cancelled')
+            // Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
                 .then(() => setUpdateReservation(currentStatus => !currentStatus))
                 .catch(setUpdateStatusError)
         }

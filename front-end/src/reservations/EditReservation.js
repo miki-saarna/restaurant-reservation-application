@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { listReservations, editReservation } from '../utils/api';
+import ErrorAlert from '../layout/ErrorAlert';
 
 export default function EditReservation() {
     const { reservation_id } = useParams();
     const history = useHistory();
 
-    const [reservation, setReservation] = useState({})
-    const [reservationLookUpError, setReservationLookUpError] = useState('')
+    const [reservation, setReservation] = useState({});
+    const [reservationLookUpError, setReservationLookUpError] = useState('');
     
     useEffect(() => {
         const abortController = new AbortController();
@@ -29,9 +30,10 @@ export default function EditReservation() {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        Promise.resolve(editReservation(reservation))
+        // Promise.resolve(editReservation(reservation))
+        editReservation(reservation)
             .then(() => history.goBack())
-        
+            .catch(console.error);
     }
 
     const cancelHandler = (event) => {
@@ -69,8 +71,8 @@ export default function EditReservation() {
                     required
                     name='mobile_number'
                     id='mobile_number'
-                    // change to text type?
-                    type='number'
+                    type='text'
+                    // type='number'
                 ></input>
 
                 <label htmlFor='reservation_date'>Reservation date:</label>
@@ -105,6 +107,7 @@ export default function EditReservation() {
                 <button type='submit' onClick={submitHandler}>Submit</button>
                 <button type='submit' onClick={cancelHandler}>Cancel</button>
             </form>
+            <ErrorAlert error={reservationLookUpError} />
         </>
     )
 }

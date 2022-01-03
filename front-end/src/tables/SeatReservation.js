@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory  } from 'react-router-dom';
 import { listTables } from '../utils/api';
-import { assignReservationToTable, updateStatusOfReservation } from '../utils/api';
+import { assignReservationToTable } from '../utils/api';
+import ErrorAlert from '../layout/ErrorAlert';
 
 export default function SeatReservation() {
     const { reservation_id } = useParams();
     const history = useHistory();
 
-    const [mapOfTables, setMapOfTables] = useState([]);
-    const [mapOfTablesError, setMapOfTablesError] = useState(null);
+
+    const [tableOptions, setTableOptions] = useState([]);
+    const [tableOptionsError, setTableOptionsError] = useState([]);
     const [selected, setSelected] = useState(null);
     const [validationError, setValidationError] = useState()
 
-
+    // used to create each table option for the selector
+    const tableOption = (table) => <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
+    
     useEffect(loadTables, []);
 
     async function loadTables() {
         const abortController = new AbortController();
         try {
             const tables = await listTables(abortController.signal);
-            const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => (
-                <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
-            ))
-            setMapOfTables(listOutTables);
+            const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => tableOption(table));
+            setTableOptions(listOutTables);
             // maybe not the best solution to use key?
             setSelected(listOutTables[0].key)
         } catch (error) {
-            setMapOfTablesError(error);
+            setTableOptionsError(error);
         }
         return () => abortController.abort();
     }
@@ -57,11 +59,12 @@ export default function SeatReservation() {
             <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}. </label>
             Table number:
             <select name='table_id' id='table_id' onChange={selectHandler}>
-                {mapOfTables}
+                {tableOptions}
             </select>
             <button onClick={submitHandler}>Submit</button>
             <button onClick={cancelHandler}>Cancel</button>
-            {validationError ? validationError.message : null}
+            {tableOptionsError ? <ErrorAlert error={tableOptionsError} /> : null}
+            {validationError ? <ErrorAlert error={validationError} /> : null}
         </>
     )
 }

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { listReservations } from '../utils/api';
 import DetailedReservation from './DetailedReservation';
+import ErrorAlert from '../layout/ErrorAlert';
 
 
 export default function SearchByNumber() {
@@ -15,10 +16,8 @@ export default function SearchByNumber() {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        listReservations({ mobile_number: number })
-            .then(data => {
-                setReservationsByNumber(data)
-            })
+        Promise.resolve(listReservations({ mobile_number: number }))
+            .then(setReservationsByNumber)
             .catch(setReservationsByNumberError)
     }
 
@@ -39,7 +38,7 @@ export default function SearchByNumber() {
                 <button type='submit'>Find</button>
             </form>
             {reservationsByNumber.length ? reservationsByNumber.map((reservation, index) => <DetailedReservation key={index} reservation={reservation} />) : <p>No reservations found</p>}
-            {reservationsByNumberError ? reservationsByNumberError : null}
+            {reservationsByNumberError ? <ErrorAlert error={reservationsByNumberError} /> : null}
         </>
     )
 }

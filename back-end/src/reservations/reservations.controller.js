@@ -65,9 +65,8 @@ async function list(req, res) {
     res.json({ data })
   } else if (date) {
     const data = await service.readByDate(date)
-    // instead of using mergeSort, can simply use SortBy within service file...
-    const sortedData = mergeSort(compareByReservationTime, data);
-    res.json({ data: sortedData })
+    res.json({ data })
+
   } else if (mobile_number) {
     const data = await service.readByNumber(mobile_number);
     res.json({ data })

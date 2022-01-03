@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createTable } from '../utils/api';
+import ErrorAlert from '../layout/ErrorAlert';
 
 export default function NewTable() {
 
@@ -12,27 +13,28 @@ export default function NewTable() {
     }
 
     const [formData, setFormData] = useState(initialFormState);
-    // rename to form 'formFieldError'?
-    const [validationError, setValidationError] = useState();
+    const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value }}) => {
+        if (name === 'capacity') {
+            value = parseInt(value)
+        }
         setFormData({
             ...formData,
             [name]: value
         })
-        console.log(formData)
     }
 
     const submitHandler = (event) => {
         event.preventDefault();
 
-        if (formData.table_name.length < 2) {
-            return setValidationError(`Table name must be at least 2 characters in length.`)
-        }
+        // if (formData.table_name.length < 2) {
+        //     return setValidationError(`Table name must be at least 2 characters in length.`)
+        // }
 
-        if (formData.capacity < 1) {
-            return setValidationError(`Capacity must be 1 person or greater.`)
-        }
+        // if (formData.capacity < 1) {
+        //     return setValidationError(`Capacity must be 1 person or greater.`)
+        // }
         createTable(formData)
         .then(() => {
             setFormData(initialFormState);
@@ -76,7 +78,7 @@ export default function NewTable() {
                 Cancel
             </button>
 
-            {validationError ? <p>{validationError}</p> : null}
+            {validationError ? <ErrorAlert error={validationError} /> : null}
         </form>
     )
 }

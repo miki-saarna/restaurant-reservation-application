@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createReservation } from '../utils/api';
+import ErrorAlert from '../layout/ErrorAlert';
 
 export default function NewReservation() {
 
@@ -16,20 +17,13 @@ export default function NewReservation() {
     }
     
     const [formData, setFormData] = useState(initialFormState);
-    const [blankFields, setBlankFields] = useState([]);
-    const [validationError, setValidationError] = useState();
+    // const [blankFields, setBlankFields] = useState([]);
+    const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value } }) => {
-
-        // if (name = 'mobile_number') {
-        //     value.replace(/[^0-9]/g, '');
-        //     console.log(value)
-        // }
-        // might not be necessary...
         if (name === 'people') {
             value = parseInt(value);
         }
-
         setFormData({
             ...formData,
             [name]: value,
@@ -39,22 +33,21 @@ export default function NewReservation() {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        // validation on attempting to submit empty field(s)
-        const nullValues = [];
-        Object.entries(formData).forEach(([k, v]) => {
-            if (!v) nullValues.push(k);
-        })
-        if (nullValues.length) {
-            return setBlankFields(nullValues);
-            // return;
-        }
+        // front-end validation on attempting to submit empty field(s)
+        // not using due to having backend validation
+        // const nullValues = [];
+        // Object.entries(formData).forEach(([k, v]) => {
+        //     if (!v) nullValues.push(k);
+        // })
+        // if (nullValues.length) {
+        //     return setBlankFields(nullValues);
+        // }
 
         createReservation(formData)
             .then(() => {
                 setFormData(initialFormState)
                 return history.push(`/dashboard?date=${formData.reservation_date}`)
             })
-            // create error message
             .catch(setValidationError);
     }
     
@@ -101,8 +94,8 @@ export default function NewReservation() {
                 required
                 onChange={changeHandler}
                 value={formData.mobile_number}
-                // change to text type?
-                type='number'
+                type='text'
+                // type='number'
                 >
             </input>
 
@@ -152,9 +145,10 @@ export default function NewReservation() {
                 Cancel
             </button>
         
-            {blankFields.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null}
-            {/* consider placing below line in its own component file... */}
-            {validationError ? <div className="alert alert-danger">Error: {validationError.message}</div> : null}
+            {/* {blankFields.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
+            <ErrorAlert error={validationError} />
+            {/* line below not neccesary for tests? */}
+            {/* {validationError ? <div className="alert alert-danger">Error: {validationError.message}</div> : null} */}
         </form>
     )
 }

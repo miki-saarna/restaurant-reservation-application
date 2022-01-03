@@ -5,7 +5,11 @@ async function list() {
 }
 
 async function readByDate(date) {
-    return knex('reservations').select('*').where('reservation_date', date)
+    return knex('reservations')
+        .select('*')
+        .where('reservation_date', date)
+        .whereIn('status', ['booked', 'seated'])
+        .orderBy("reservation_time")
 }
 
 async function readByNumber(mobile_number) {

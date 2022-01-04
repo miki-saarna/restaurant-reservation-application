@@ -7,6 +7,7 @@ export default function EditReservation() {
     const { reservation_id } = useParams();
     const history = useHistory();
 
+    // change name to formdata???
     const [reservation, setReservation] = useState({});
     const [reservationLookUpError, setReservationLookUpError] = useState('');
     
@@ -30,9 +31,11 @@ export default function EditReservation() {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        // e2e test fails without Promise.resolve
         // Promise.resolve(editReservation(reservation))
         editReservation(reservation)
-            .then(() => history.goBack())
+            .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
+            // .then(() => history.goBack())
             .catch(console.error);
     }
 

@@ -21,8 +21,8 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
     const cancelHandler = (event) => {
         event.preventDefault();
         if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
-            updateReservationStatus(reservation_id, 'cancelled')
             // Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
+            Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
                 .then(() => setUpdateReservation(currentStatus => !currentStatus))
                 .catch(setUpdateStatusError)
         }
@@ -52,7 +52,7 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
                 <li>
                     People: {people}
                 </li>
-                <li data-reservation-id-status={reservation.reservation_id}>
+                <li data-reservation-id-status={reservation_id}>
                     Status: {status}
                 </li>
                 {/* can I remove the button below? Or do the tests rely on it? */}

@@ -85,6 +85,7 @@ async function create(req, res) {
 async function edit(req, res) {
   const { data } = req.body;
   const edittedReservation = await service.edit(data)
+  console.log(edittedReservation)
   res.json({ data: edittedReservation})
 }
 
@@ -94,9 +95,9 @@ async function destroy(req, res) {
   res.sendStatus(204);
 }
 
-async function read(req, res, next) {
+async function read(req, res) {
   const reservationFound = res.locals.reservationFound
-  res.status(200).json({ data: res.locals.reservationFound })
+  res.status(200).json({ data: reservationFound })
 }
 
 async function updateStatus(req, res, next) {

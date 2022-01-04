@@ -13,7 +13,7 @@ export default function DetailedTable({ table, setUpdateReservation }) {
         event.preventDefault();
         if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
             // Promise.resolve(deleteSeatAssignment(table_id))
-            deleteSeatAssignment(table_id)
+            Promise.resolve(deleteSeatAssignment(table_id))
                 .then(() => {
                     setUpdateReservation(currentStatus => !currentStatus)
                     setIsReserved(false)
@@ -35,9 +35,10 @@ return (
                 Capacity: {capacity}
             </li>
             <li>
+                {/* {isReserved ? <p data-table-id-status={table_id}>Occupied</p> : <p data-table-id-status={table_id}>Free</p>} */}
                 <h4 data-table-id-status={table_id}>{isReserved ? 'Occupied' : 'Free'}</h4>
             </li>
-            {isReserved ? <button data-table-id-finished={table_id} onClick={handleFinish}>Finish</button> : null}
+            {isReserved ? <button data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
         </ul>
         <ErrorAlert error={deleteSeatAssignmentError} />
     </>

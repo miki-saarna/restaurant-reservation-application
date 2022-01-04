@@ -13,30 +13,43 @@ async function create(newTable) {
         .then((createdTable) => createdTable[0]);
 }
 
-async function update(table_id, reservation_id) {
-    return knex('tables')
-        .update({ reservation_id })
-        .where({ table_id })
-        .returning('*')
-        .then((updatedTable) => updatedTable[0])
-        .then(() => {
-            return knex('reservations')
-                .update('status', 'seated')
-                .where({ reservation_id})
-        })
+function update(table_id, reservation_id) {
+    return knex.transaction(function(trx) {
+        knex('tables')
+            .update({ reservation_id })
+            .where({ table_id })
+            .transacting(trx)
+            .then(() => {
+                return knex('reservations')
+                    .update('status', 'seated')
+                    .where({ reservation_id })
+            })
+            .then(trx.commit)
+            .catch(trx.rollback);
+    })
+    .catch(function(error) {
+        console.error(error);
+    })
 }
 
+
 function unseat(table_id, reservation_id) {
-    return knex('tables')
-        .update('reservation_id', null)
-        .where({ table_id })
-        .returning('*')
-        .then(unseatedTable => unseatedTable[0])
-        .then(() => {
-            return knex('reservations')
-                .update('status', 'finished')
-                .where({ reservation_id });
-        })
+    return knex.transaction(function(trx) {
+        knex('tables')
+            .update('reservation_id', null)
+            .where({ table_id })
+            .transacting(trx)
+            .then(() => {
+                return knex('reservations')
+                    .update('status', 'finished')
+                    .where({ reservation_id });
+            })
+            .then(trx.commit)
+            .catch(trx.rollback)
+    })
+    .catch(function(error) {
+        console.error(error);
+    })
 }
 
 async function findReservation(reservation_id) {
@@ -53,9 +66,7 @@ async function read(table_id) {
         .then((tableFound) => tableFound[0])
 }
 
-async function destroy(table_id) {
-    
-}
+
 
 
 module.exports = {
@@ -64,6 +75,5 @@ module.exports = {
     update,
     findReservation,
     read,
-    destroy,
     unseat
 }

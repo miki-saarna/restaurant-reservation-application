@@ -3,6 +3,7 @@ const knex = require('../db/connection');
 async function list() {
     return knex('reservations')
         .select('*')
+        .whereIn('status', ['booked', 'seated'])
         // .orderBy("reservation_date")
         // .orderBy("reservation_time")
 }
@@ -63,6 +64,8 @@ async function edit(edittedReservation) {
     return knex('reservations')
         .update(edittedReservation, '*')
         .where('reservation_id', edittedReservation.reservation_id)
+        // is returning needed?
+        .returning('*')
         .then((editted) => editted[0])
 
 }

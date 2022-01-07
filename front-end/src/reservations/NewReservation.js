@@ -17,7 +17,7 @@ export default function NewReservation() {
     }
     
     const [formData, setFormData] = useState(initialFormState);
-    // const [blankFields, setBlankFields] = useState([]);
+    const [blankFields, setBlankFields] = useState('');
     const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value } }) => {
@@ -32,17 +32,35 @@ export default function NewReservation() {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        // remove any pre-existing frontend-validation errors
+        setBlankFields('')
 
         // front-end validation on attempting to submit empty field(s)
-        // not using due to having backend validation
         // const nullValues = [];
         // Object.entries(formData).forEach(([k, v]) => {
         //     if (!v) nullValues.push(k);
         // })
         // if (nullValues.length) {
-        //     return setBlankFields(nullValues);
+        //     return setBlankFields({
+        //         message: `Do not leave the following field(s) empty: ${nullValues.join(', ')}`
+        //     });
         // }
 
+        // front-end validation for mobile number
+        // contains invalid characters
+        const invalidCharacters = formData.mobile_number.replace(/[0-9-()]/g, '');
+        if (invalidCharacters.length) setBlankFields({ message: `Only digits, parenthesis, and dashes may be used for mobile-number` });
+        // number doesn't contain 10-digits
+        const onlyNumbers = formData.mobile_number.replace(/\D/g, '');
+        if (onlyNumbers.length !== 10) setBlankFields({ message: `Mobile number must be exactly 10-digits long`})
+
+        // front-end validation for reservation time
+        if (formData.reservation_time < '10:30:00') setBlankFields({ message: `The restaurant does not open until 10:30 AM` })
+        if (formData.reservation_time > '21:30:00') setBlankFields({ message: `Please make a reservation at least 1 hour prior to closing. The restaurant closes at 10:30 PM` })
+
+        if (formData.people < 1 || !Number.isInteger(formData.people)) setBlankFields({ message: 'The number of people in a reservation must be a positive integer' })
+
+        // API call
         createReservation(formData)
             .then(() => {
                 setFormData(initialFormState)
@@ -145,6 +163,7 @@ export default function NewReservation() {
                 Cancel
             </button>
         
+            <ErrorAlert error={blankFields} />
             {/* {blankFields.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
             <ErrorAlert error={validationError} />
             {/* line below not neccesary for tests? */}

@@ -63,12 +63,13 @@ export default function SeatReservation() {
     const submitHandler = (event) => {
         event.preventDefault();
         assignReservationToTable(selected, reservation_id)
+        // Promise.all([listReservations({ reservation_id }), assignReservationToTable(selected, reservation_id)])
             .then(() => {
                 setSelected(null);
-                return history.push('/dashboard');
+                // return history.goBack();
+                // return history.push(`/dashboard`);
                 // fails validation
-                // return history.push('/')
-                // adjust to proper date???
+                return history.push('/')
             })
             .catch(setValidationError)
     }

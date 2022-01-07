@@ -1,12 +1,12 @@
 const knex = require('../db/connection');
 
-async function list() {
+function list() {
     return knex('tables')
         .select('*')
         .orderBy('table_name')
 }
 
-async function create(newTable) {
+function create(newTable) {
     return knex('tables')
         .insert(newTable)
         .returning('*')
@@ -52,18 +52,24 @@ function unseat(table_id, reservation_id) {
     })
 }
 
-async function findReservation(reservation_id) {
+function findReservation(reservation_id) {
     return knex('reservations')
         .select('*')
         .where({ reservation_id })
         .then(reservationFound => reservationFound[0])
 }
 
-async function read(table_id) {
+function read(table_id) {
     return knex('tables')
         .select('*')
         .where({ table_id })
         .then((tableFound) => tableFound[0])
+}
+
+async function destroy(table_id) {
+    return knex('tables')
+        .del()
+        .where({ table_id })
 }
 
 
@@ -75,5 +81,6 @@ module.exports = {
     update,
     findReservation,
     read,
-    unseat
+    unseat,
+    destroy
 }

@@ -1,7 +1,7 @@
-export default function reservationFormatValidator(setFrontendValidationError, formData) {
+export default function reservationFormatValidator(setFrontendValidationError, reservation) {
     // Attempting to submit empty field(s)
     const nullValues = [];
-    Object.entries(formData).forEach(([k, v]) => {
+    Object.entries(reservation).forEach(([k, v]) => {
         if (!v) nullValues.push(k);
     })
     if (nullValues.length) {
@@ -11,7 +11,7 @@ export default function reservationFormatValidator(setFrontendValidationError, f
         return true;
     }
 
-    const { mobile_number, people } = formData;
+    const { mobile_number, people } = reservation;
         
     // mobile number contains invalid characters
     const invalidCharacters = mobile_number.replace(/[0-9-()]/g, '');

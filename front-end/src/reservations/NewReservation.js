@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createReservation } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
+import reservationTimeValidator from '../utils/validators/reservationTimeValidator';
+import reservationFormatValidator from '../utils/validators/reservationFormatValidator';
 
 export default function NewReservation() {
 
@@ -17,7 +19,7 @@ export default function NewReservation() {
     }
     
     const [formData, setFormData] = useState(initialFormState);
-    const [blankFields, setBlankFields] = useState('');
+    const [frontendValidationError, setFrontendValidationError] = useState('');
     const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value } }) => {
@@ -33,7 +35,7 @@ export default function NewReservation() {
     const submitHandler = (event) => {
         event.preventDefault();
         // remove any pre-existing frontend-validation errors
-        setBlankFields('')
+        setFrontendValidationError('')
 
         // front-end validation on attempting to submit empty field(s)
         // const nullValues = [];
@@ -41,24 +43,15 @@ export default function NewReservation() {
         //     if (!v) nullValues.push(k);
         // })
         // if (nullValues.length) {
-        //     return setBlankFields({
+        //     return setFrontendValidationError({
         //         message: `Do not leave the following field(s) empty: ${nullValues.join(', ')}`
         //     });
         // }
 
-        // front-end validation for mobile number
-        // contains invalid characters
-        const invalidCharacters = formData.mobile_number.replace(/[0-9-()]/g, '');
-        if (invalidCharacters.length) setBlankFields({ message: `Only digits, parenthesis, and dashes may be used for mobile-number` });
-        // number doesn't contain 10-digits
-        const onlyNumbers = formData.mobile_number.replace(/\D/g, '');
-        if (onlyNumbers.length !== 10) setBlankFields({ message: `Mobile number must be exactly 10-digits long`})
-
-        // front-end validation for reservation time
-        if (formData.reservation_time < '10:30:00') setBlankFields({ message: `The restaurant does not open until 10:30 AM` })
-        if (formData.reservation_time > '21:30:00') setBlankFields({ message: `Please make a reservation at least 1 hour prior to closing. The restaurant closes at 10:30 PM` })
-
-        if (formData.people < 1 || !Number.isInteger(formData.people)) setBlankFields({ message: 'The number of people in a reservation must be a positive integer' })
+        // // front-end validation for reservation date and time
+        reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)
+        // // front-end validation for mobile number and reservation size
+        reservationFormatValidator(setFrontendValidationError, formData.mobile_number, formData.people)
 
         // API call
         createReservation(formData)
@@ -163,8 +156,8 @@ export default function NewReservation() {
                 Cancel
             </button>
         
-            <ErrorAlert error={blankFields} />
-            {/* {blankFields.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
+            <ErrorAlert error={frontendValidationError} />
+            {/* {frontendValidationError.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
             <ErrorAlert error={validationError} />
             {/* line below not neccesary for tests? */}
             {/* {validationError ? <div className="alert alert-danger">Error: {validationError.message}</div> : null} */}

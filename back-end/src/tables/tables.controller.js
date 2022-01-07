@@ -59,10 +59,16 @@ async function reservationNotSeated(req, res, next) {
     next();
 }
     
-async function tableIsOccupied(req, res, next) {
+function tableIsNotOccupied(req, res, next) {
     const table = res.locals.table;
     if (!table.reservation_id) return next({ status: 400, message: `Cannot unseat a table that is not occupied.`});
     res.locals.reservation_id = table.reservation_id
+    next();
+}
+
+function tableIsOccupied(req, res, next) {
+    const table = res.locals.table;
+    if (table.reservation_id) return next({ status: 400, message: `Cannot delete a table that is occupied.`});
     next();
 }
 
@@ -70,7 +76,12 @@ async function list(req, res) {
     const data = await service.list();
     // below not needed...
     // const sortedData = mergeSort(compareByTableName, data);
-    res.json({ data: data })
+    res.json({ data })
+}
+
+async function read(req, res) {
+    const data = res.locals.foundReservation;
+    res.json({ data })
 }
 
 async function create(req, res) {
@@ -103,9 +114,17 @@ async function unseat(req, res) {
     res.json({ data })
 }
 
+async function destroy(req, res) {
+    const table_id = res.locals.table_id;
+    await service.destroy(table_id);
+    res.sendStatus(204)
+}
+
 module.exports = {
     list: asyncErrorBoundary(list),
     create: [hasRequiredProperties, tableFormatValidator(), asyncErrorBoundary(create)],
     update: [asyncErrorBoundary(tableExists), asyncErrorBoundary(reservationExists), reservationNotSeated, asyncErrorBoundary(update)],
-    unseat: [asyncErrorBoundary(tableExists), tableIsOccupied, asyncErrorBoundary(unseat)],
+    unseat: [asyncErrorBoundary(tableExists), tableIsNotOccupied, asyncErrorBoundary(unseat)],
+    read: [tableExists, asyncErrorBoundary(read)],
+    destroy: [tableExists, tableIsOccupied, asyncErrorBoundary(destroy)],
 }

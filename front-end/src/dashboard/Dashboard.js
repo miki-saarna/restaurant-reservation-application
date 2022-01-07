@@ -30,8 +30,9 @@ function Dashboard({ date }) {
   const [APIRequestError, setAPIRequestError] = useState(null);
   // used to re-render list of reservations that are displayed
   const [updateReservation, setUpdateReservation] = useState(false);
+  const [updateTables, setUpdateTables] = useState(false);
 
-  useEffect(loadDashboard, [date, updateReservation]);
+  useEffect(loadDashboard, [date, updateReservation, updateTables]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -44,7 +45,7 @@ function Dashboard({ date }) {
           setReservations(listOfReservations);
 
         const tablesList = response[1].map((table) =>
-          <DetailedTable key={table.table_id} table={table} setUpdateReservation={setUpdateReservation} />
+          <DetailedTable key={table.table_id} table={table} setUpdateReservation={setUpdateReservation} setUpdateTables={setUpdateTables} />
           ) 
           setTables(tablesList)
       })

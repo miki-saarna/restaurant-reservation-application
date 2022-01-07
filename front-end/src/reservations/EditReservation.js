@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { listReservations, editReservation } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
+import reservationTimeValidator from '../utils/validators/reservationTimeValidator';
+import reservationFormatValidator from '../utils/validators/reservationFormatValidator';
 
 export default function EditReservation() {
     const { reservation_id } = useParams();
@@ -9,6 +11,7 @@ export default function EditReservation() {
 
     // change name to formdata???
     const [reservation, setReservation] = useState({});
+    const [frontendValidationError, setFrontendValidationError] = useState('');
     const [reservationLookUpError, setReservationLookUpError] = useState('');
     
     useEffect(() => {
@@ -30,9 +33,19 @@ export default function EditReservation() {
     }
 
     const submitHandler = (event) => {
-        event.preventDefault();
-        // e2e test fails without Promise.resolve
-        // Promise.resolve(editReservation(reservation))
+        event.preventDefault();     
+        // remove any pre-existing frontend-validation errors
+        setFrontendValidationError('')
+
+        // // front-end validation for mobile number and reservation size. If true (validation fails), return to stop function from executing API call
+        if(reservationFormatValidator(setFrontendValidationError, reservation)) {
+            return
+        }
+        // // front-end validation for reservation date and time. If true (validation fails), return to stop function from executing API call
+        if (reservationTimeValidator(setFrontendValidationError, reservation.reservation_date, reservation.reservation_time)) {
+            return
+        }
+
         editReservation(reservation)
             .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
             // .then(() => history.goBack())
@@ -110,6 +123,7 @@ export default function EditReservation() {
                 <button type='submit' onClick={submitHandler}>Submit</button>
                 <button type='submit' onClick={cancelHandler}>Cancel</button>
             </form>
+            <ErrorAlert error={frontendValidationError} />
             <ErrorAlert error={reservationLookUpError} />
         </>
     )

@@ -22,20 +22,24 @@ export default function reservationTimeValidator(setFrontEndValidationError, dat
     
     // validation if reservation date is in the past
     if (reservationDate - presentDate < 0) {
-      return setFrontEndValidationError({ message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
+      setFrontEndValidationError({ message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
+      return true;
     }
   
     // validation if reservation is on a tuesday
     if (reservationDate.getDay() === 2) {
-      return setFrontEndValidationError({ message: `Our restaurant is closed on Tuesday to allow the employees time to rest and enjoy their day.`})
+      setFrontEndValidationError({ message: `Our restaurant is closed on Tuesday to allow the employees time to rest and enjoy their day.`})
+      return true;
     }
   
     // validation if reservation is not during open hours
     if (time < '10:30:00') {
-      return setFrontEndValidationError({ message: `The restaurant does not open until 10:30 AM.`})
+      setFrontEndValidationError({ message: `The restaurant does not open until 10:30 AM.`})
+      return true;
     }
   
     if (time > '21:30:00') {
-      return setFrontEndValidationError({ message: `Please make a reservation at least 1 hour prior to closing. The restaurant closes at 10:30 PM.`})
+      setFrontEndValidationError({ message: `Please make a reservation at least 1 hour prior to closing. The restaurant closes at 10:30 PM.`})
+      return true;
     }
 }

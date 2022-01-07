@@ -37,21 +37,14 @@ export default function NewReservation() {
         // remove any pre-existing frontend-validation errors
         setFrontendValidationError('')
 
-        // front-end validation on attempting to submit empty field(s)
-        // const nullValues = [];
-        // Object.entries(formData).forEach(([k, v]) => {
-        //     if (!v) nullValues.push(k);
-        // })
-        // if (nullValues.length) {
-        //     return setFrontendValidationError({
-        //         message: `Do not leave the following field(s) empty: ${nullValues.join(', ')}`
-        //     });
-        // }
-
-        // // front-end validation for reservation date and time
-        reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)
-        // // front-end validation for mobile number and reservation size
-        reservationFormatValidator(setFrontendValidationError, formData.mobile_number, formData.people)
+        // // front-end validation for mobile number and reservation size. If true (validation fails), return to stop function from executing API call
+        if(reservationFormatValidator(setFrontendValidationError, formData)) {
+            return
+        }
+        // // front-end validation for reservation date and time. If true (validation fails), return to stop function from executing API call
+        if (reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)) {
+            return
+        }
 
         // API call
         createReservation(formData)

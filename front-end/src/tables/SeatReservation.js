@@ -17,39 +17,24 @@ export default function SeatReservation() {
     // used to create each table option for the selector
     const tableOption = (table) => <option key={table.table_id} value={table.table_id}>{table.table_name} - {table.capacity}</option>
     
-    useEffect(loadTables, []);
-
-    async function loadTables() {
-        const abortController = new AbortController();
-        try {
-            const tables = await listTables(abortController.signal);
-            // const tables = await listTables(abortController.signal);
-            const listOutTables = tables.map((table) => tableOption(table));
-            // const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => tableOption(table));
-            setTableOptions(listOutTables);
-            // maybe not the best solution to use key?
-            setSelected(listOutTables[0].key)
-        } catch (error) {
-            setTableOptionsError(error);
+    useEffect(() => {
+        async function loadTables() {
+            const abortController = new AbortController();
+            try {
+                const tables = await listTables(abortController.signal);
+                // const tables = await listTables(abortController.signal);
+                const listOutTables = tables.map((table) => tableOption(table));
+                // const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => tableOption(table));
+                setTableOptions(listOutTables);
+                // maybe not the best solution to use key?
+                setSelected(listOutTables[0].key)
+            } catch (error) {
+                setTableOptionsError(error);
+            }
+            return () => abortController.abort();
         }
-        return () => abortController.abort();
-    }
-    // function loadTables() {
-    //     const abortController = new AbortController();
-        
-    //         Promise.resolve(listTables(abortController.signal))
-    //         // const tables = await listTables(abortController.signal);
-    //         .then(response => {
-    //             const listOutTables = response.map((table) => tableOption(table));
-    //             setTableOptions(listOutTables);
-    //             setSelected(listOutTables[0].key)
-    //         })
-    //         // const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => tableOption(table));
-    //         // maybe not the best solution to use key?
-    //     .catch (setTableOptionsError)
-    //     // }
-    //     return () => abortController.abort();
-    // }
+        loadTables();
+    }, []);
 
     const selectHandler = () => {
         // unsure if this is the best way to obtain the value of table_id

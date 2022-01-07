@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createReservation } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
+import reservationTimeValidator from '../utils/validators/reservationTimeValidator';
+import reservationFormatValidator from '../utils/validators/reservationFormatValidator';
 
 export default function NewReservation() {
 
@@ -17,7 +19,7 @@ export default function NewReservation() {
     }
     
     const [formData, setFormData] = useState(initialFormState);
-    // const [blankFields, setBlankFields] = useState([]);
+    const [frontendValidationError, setFrontendValidationError] = useState('');
     const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value } }) => {
@@ -32,17 +34,19 @@ export default function NewReservation() {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        // remove any pre-existing frontend-validation errors
+        setFrontendValidationError('')
 
-        // front-end validation on attempting to submit empty field(s)
-        // not using due to having backend validation
-        // const nullValues = [];
-        // Object.entries(formData).forEach(([k, v]) => {
-        //     if (!v) nullValues.push(k);
-        // })
-        // if (nullValues.length) {
-        //     return setBlankFields(nullValues);
-        // }
+        // // front-end validation for mobile number and reservation size. If true (validation fails), return to stop function from executing API call
+        if(reservationFormatValidator(setFrontendValidationError, formData)) {
+            return
+        }
+        // // front-end validation for reservation date and time. If true (validation fails), return to stop function from executing API call
+        if (reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)) {
+            return
+        }
 
+        // API call
         createReservation(formData)
             .then(() => {
                 setFormData(initialFormState)
@@ -145,7 +149,8 @@ export default function NewReservation() {
                 Cancel
             </button>
         
-            {/* {blankFields.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
+            <ErrorAlert error={frontendValidationError} />
+            {/* {frontendValidationError.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
             <ErrorAlert error={validationError} />
             {/* line below not neccesary for tests? */}
             {/* {validationError ? <div className="alert alert-danger">Error: {validationError.message}</div> : null} */}

@@ -1,7 +1,7 @@
 function reservationTimeValidator() {
     return function(req, res, next) {
         const { data } = req.body;
-        // console.log(data)
+        // get present time in UTC
         const presentDateUTC = new Date();
         // get timezone offset in ms
         const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;

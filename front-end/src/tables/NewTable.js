@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { createTable } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
+import tableFormatValidator from '../utils/validators/tableFormatValidator';
 
 export default function NewTable() {
 
@@ -13,6 +14,7 @@ export default function NewTable() {
     }
 
     const [formData, setFormData] = useState(initialFormState);
+    const [frontendValidationError, setFrontendValidationError] = useState('');
     const [validationError, setValidationError] = useState('');
 
     const changeHandler = ({ target: { name, value }}) => {
@@ -27,7 +29,13 @@ export default function NewTable() {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        // remove any pre-existing frontend-validation errors
+        setFrontendValidationError('')
 
+        // // front-end validation for table name and capacity. If true (validation fails), return to stop function from executing API call
+        if(tableFormatValidator(setFrontendValidationError, formData)) {
+            return
+        }
         // if (formData.table_name.length < 2) {
         //     return setValidationError(`Table name must be at least 2 characters in length.`)
         // }
@@ -77,7 +85,7 @@ export default function NewTable() {
             <button type='submit' onClick={cancelHandler}>
                 Cancel
             </button>
-
+            <ErrorAlert error={frontendValidationError} />
             {validationError ? <ErrorAlert error={validationError} /> : null}
         </form>
     )

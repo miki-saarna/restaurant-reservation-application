@@ -19,6 +19,13 @@ li {
   min-width: 200px;
 }
 
+.button {
+  border: none;
+  border-radius: 9px;
+  padding: 3px 10px;
+  margin-top: 5px;
+}
+
 /* reservations */
 
 .reservations {
@@ -31,7 +38,7 @@ li {
   flex-shrink: 0;
   flex-basis: 360px;
   padding: 9px;
-  background-color: #99c1de;
+  background-color: rgba(1, 1, 1, 0.9);
   border-radius: 10px;
 }
 
@@ -45,18 +52,31 @@ li {
 }
 
 .reservation button:hover {
-  color: #ef233c;
+  /* color: #ef233c; */
   background-color: white;
   transition-timing-function: cubic-bezier(.4,0,.2,1);
   transition-duration: .2s;
 }
 
 .edit {
+  /* background-color: rgb(255, 244, 206); */
   background-color: rgba(244, 211, 94);
+  
+}
+
+.edit:hover {
+  background-color: rgb(255, 229, 136) !important;
+  color: black !important;
+  /* color: rgba(244, 211, 94) !important; */
 }
 
 .cancel {
-  background-color: #f95738;
+  background-color: #ef233c;
+  color: #edf2f4;
+}
+
+.cancel:hover {
+  background-color: #ff5f72 !important;
 }
 
 
@@ -78,24 +98,21 @@ li {
   flex-basis: 170px;
   margin: 5px;
   border-radius: 10px;
-  background-color: #99c1de;
+  background-color: rgba(1, 1, 1, 0.9);
   min-height: 120px;
+  position: relative;
 }
 
 /* .table li {
   color: #fdfffc;
 } */
 
-.table button {
-  border: none;
-  border-radius: 9px;
-  padding: 3px 10px;
-  margin-top: 5px;
+.table .button {
   color: #edf2f4;
   background-color: #ef233c;
 }
 
-.table button:hover {
+.table .button:hover {
   background-color: #edf2f4;
   color: #ef233c;
   transition-timing-function: cubic-bezier(.4,0,.2,1);
@@ -104,10 +121,42 @@ li {
 
 .detail {
   margin-left: 4px;
-  color: #393a44;
+  color: #99c1de;
 }
 
 .occupied {
   color: #ef233c;
 }
 
+button.x {
+  font-size: 18px;
+  color: #edf2f4;
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  top: 2%;
+  right: 6%;
+}
+
+button.x:hover {
+  font-size: 23px;
+  color: white;
+  transform: translate(7%, -12%);
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .2s;
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
+}
+
+button.x:focus {
+  outline: none;
+}
+
+/* for mobile? */
+button.x:active {
+  font-size: 23px;
+  color: white;
+  transform: translate(7%, -12%);
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .2s;
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
+}

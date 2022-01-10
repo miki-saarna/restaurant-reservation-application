@@ -47,9 +47,8 @@ return (
                 Status: <span className='detail'>{isReserved ? <span className='occupied'>Occupied</span> : 'Free'}</span>
                 {/* <h4 data-table-id-status={table_id}>Status: {isReserved ? 'Occupied' : 'Free'}</h4> */}
             </li>
-            {/* figure out alternative way to add delete button... */}
-            {isReserved ? <button className='solid' data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
-            {isReserved ? null : <button className='solid' onClick={handleDelete}>Delete</button>}
+            {isReserved ? <button className='button' data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
+            {isReserved ? null : <button mat-button className='x' onClick={handleDelete}>x</button>}
         </ul>
         <ErrorAlert error={deleteError} />
     </>

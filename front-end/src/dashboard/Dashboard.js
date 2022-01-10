@@ -62,12 +62,12 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={APIRequestError} />
       <div className='table'>
-        <p>Today's reservations:</p>
+        <h3>Today's reservations:</h3>
         {reservations.length ? reservations : null}
       </div>
-      <div className='table'>
-      <p>Tables:</p>
-        {tables.length ? tables : null}
+      <div>
+      <h3 className='tablesTitle'>Tables:</h3>
+        <div className='tables'>{tables.length ? tables : null}</div>
       </div>
     </main>
   );

@@ -37,20 +37,19 @@ return (
     <>
         <ul className='table'>
             <li>
-                ID: {table_id}
+                {table_name}
             </li>
             <li>
-                Name: {table_name}
+                Capacity: <span className='tableDetail'>{capacity}</span>
             </li>
-            <li>
-                Capacity: {capacity}
-            </li>
-            <li>
+            <li data-table-id-status={table_id}> 
                 {/* {isReserved ? <p data-table-id-status={table_id}>Occupied</p> : <p data-table-id-status={table_id}>Free</p>} */}
-                <h4 data-table-id-status={table_id}>{isReserved ? 'Occupied' : 'Free'}</h4>
+                Status: <span className='tableDetail'>{isReserved ? <span className='occupied'>Occupied</span> : 'Free'}</span>
+                {/* <h4 data-table-id-status={table_id}>Status: {isReserved ? 'Occupied' : 'Free'}</h4> */}
             </li>
-            {isReserved ? null : <button  onClick={handleDelete}>Delete</button>}
-            {isReserved ? <button data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
+            {/* figure out alternative way to add delete button... */}
+            {isReserved ? <button className='solid' data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
+            {isReserved ? null : <button className='solid' onClick={handleDelete}>Delete</button>}
         </ul>
         <ErrorAlert error={deleteError} />
     </>

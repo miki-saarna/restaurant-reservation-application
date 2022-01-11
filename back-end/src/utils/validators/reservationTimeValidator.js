@@ -28,7 +28,7 @@ function reservationTimeValidator() {
         }
     
         // validation if reservation is on a tuesday
-        if (reservationDate.getDay() === 2) {
+        if (reservationDateUTC.getDay() === 2) {
           return next({ status: 400, message: `Our restaurant is closed on Tuesday to allow the employees time to rest and enjoy their day.`})
         }
     

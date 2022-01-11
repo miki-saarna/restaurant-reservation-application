@@ -1,11 +1,11 @@
 export default function reservationTimeValidator(setFrontendValidationError, date, time) {
     // get present time in UTC
-    const presentDateUTC = new Date();
+    const presentDate = new Date();
     // get timezone offset in ms
-    const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;
+    // const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;
     // get present date/time with timezone consideration
     // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
-    const presentDate = new Date(presentDateUTC.getTime() - timezoneOffset);
+    // const presentDate = new Date(presentDateUTC.getTime() - timezoneOffset);
     
     // separate year, month, day
     const dateArray = date.split('-')
@@ -14,11 +14,10 @@ export default function reservationTimeValidator(setFrontendValidationError, dat
     // separate hour, minute, second
     const timeArray = time.split(':')
     
-    const reservationDateUTC = new Date(...dateArray, ...timeArray);
+    const reservationDate = new Date(...dateArray, ...timeArray);
     // get reservation date/time with timezone consideration
     // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
-    const reservationDate = new Date(reservationDateUTC.getTime() - timezoneOffset)
-    
+    // const reservationDate = new Date(reservationDateUTC.getTime() - timezoneOffset)
     
     // validation if reservation date is in the past
     if (reservationDate - presentDate < 0) {

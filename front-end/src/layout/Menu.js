@@ -13,7 +13,7 @@ function Menu() {
     <nav>
         <ul>
           <li>
-            <Link to="/dashboard" className='wow'>
+            <Link to="/dashboard">
               Dashboard
             </Link>
           </li>

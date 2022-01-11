@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import DetailedTable from "../tables/DetailedTable";
 import DetailedReservation from "../reservations/DetailedReservation";
+import { previous, next, today } from "../utils/date-time";
 // import useQuery from "../utils/useQuery";
 
 /**
@@ -19,51 +20,73 @@ function useQuery() {
 }
 
 function Dashboard({ date }) {
+
   const query = useQuery();
   const dateFromQuery = query.get("date");
   if (dateFromQuery) {
     date = dateFromQuery;
   }
 
+  const [newDate, setNewDate] = useState(date);
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [APIRequestError, setAPIRequestError] = useState(null);
   // used to re-render list of reservations that are displayed
   const [updateReservation, setUpdateReservation] = useState(false);
   const [updateTables, setUpdateTables] = useState(false);
-
-  useEffect(loadDashboard, [date, updateReservation, updateTables]);
-
-  function loadDashboard() {
+  
+  // useEffect(loadDashboard, [newDate, updateReservation, updateTables]);
+  
+  useEffect(() => {
     const abortController = new AbortController();
+    Promise.all([listReservations({ date: newDate }, abortController.signal), listTables(abortController.signal)])
+    .then((response) => {
+      const listOfReservations = response[0].map((reservation) =>
+      <DetailedReservation key={reservation.reservation_id} reservation={reservation} setUpdateReservation={setUpdateReservation} />
+      )
+      setReservations(listOfReservations);
+      
+      const tablesList = response[1].map((table) =>
+      <DetailedTable key={table.table_id} table={table} setUpdateReservation={setUpdateReservation} setUpdateTables={setUpdateTables} />
+      ) 
+      setTables(tablesList)
+    })
+    .catch(setAPIRequestError);
     
-    Promise.all([listReservations({ date }, abortController.signal), listTables(abortController.signal)])
-      .then((response) => {
-        const listOfReservations = response[0].map((reservation) =>
-          <DetailedReservation key={reservation.reservation_id} reservation={reservation} setUpdateReservation={setUpdateReservation} />
-          )
-          setReservations(listOfReservations);
-
-        const tablesList = response[1].map((table) =>
-          <DetailedTable key={table.table_id} table={table} setUpdateReservation={setUpdateReservation} setUpdateTables={setUpdateTables} />
-          ) 
-          setTables(tablesList)
-      })
-      .catch(setAPIRequestError);
-
     return () => abortController.abort();
+  }, [newDate, updateReservation, updateTables])
+
+  const dateChangeHandler = (event) => {
+    event.preventDefault();
+    const dateButton = event.target.id;
+    if (dateButton === 'previous') {
+      setNewDate(previous(newDate))
+    } else if (dateButton === 'next') {
+      setNewDate(next(newDate))
+    } else {
+      setNewDate(today(newDate))
+    }
   }
 
   return (
     <main>
       <h2>Dashboard</h2>
 
+
       <div>
         {/* is line break the best method? */}
-        <h5>Reservations for date: <br/>{date}</h5>
+        <h5>Reservations for date: <br/>{newDate}</h5>
       </div>
+      
 
       <ErrorAlert error={APIRequestError} />
+
+      <div className='dateChangeBtns'>
+        <button onClick={dateChangeHandler} id='previous'></button>
+        <button onClick={dateChangeHandler} id='present'>Today</button>
+        <button onClick={dateChangeHandler} id='next'></button>
+      </div>
+      
 
       <hr />
 

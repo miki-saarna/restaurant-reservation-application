@@ -56,12 +56,16 @@ function Dashboard({ date }) {
 
   return (
     <main>
-      <h1>Dashboard</h1>
+      <h2>Dashboard</h2>
+
       <div>
         {/* is line break the best method? */}
-        <h4>Reservations for date: <br/>{date}</h4>
+        <h5>Reservations for date: <br/>{date}</h5>
       </div>
+      
       <ErrorAlert error={APIRequestError} />
+
+      <hr />
 
       <div>
         <h3>Today's reservations:</h3>

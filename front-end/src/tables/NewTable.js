@@ -58,7 +58,7 @@ export default function NewTable() {
 
 
     return (
-        <form>
+        <form className='create'>
             <label htmlFor='table_name'>Table name:</label>
             <input
                 id='table_name'

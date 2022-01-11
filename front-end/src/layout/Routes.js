@@ -19,6 +19,8 @@ import EditReservation from "../reservations/EditReservation";
  */
 function Routes() {
   return (
+    <>
+    
     <Switch>
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
@@ -48,6 +50,7 @@ function Routes() {
         <NotFound />
       </Route>
     </Switch>
+    </>
   );
 }
 

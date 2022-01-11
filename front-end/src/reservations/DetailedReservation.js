@@ -29,39 +29,39 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
 
     return (
         <>
-            <ul className='table'>
+            <ul className='reservation'>
+                {/* <li>
+                    Reservation ID: <span className='detail'>{reservation_id}
+                </li> */}
                 <li>
-                    Reservation ID: {reservation_id}
+                    First name: <span className='detail'>{first_name}</span>
                 </li>
                 <li>
-                    First name: {first_name}
+                    Last name: <span className='detail'>{last_name}</span>
                 </li>
                 <li>
-                    Last name: {last_name}
+                    Number: <span className='detail'>{mobile_number}</span>
                 </li>
                 <li>
-                    Number: {mobile_number}
+                    Date: <span className='detail'>{reservation_date}</span>
                 </li>
                 <li>
-                    Date: {reservation_date}
+                    Time: <span className='detail'>{reservation_time}</span>
                 </li>
                 <li>
-                    Time: {reservation_time}
-                </li>
-                <li>
-                    People: {people}
+                    People: <span className='detail'>{people}</span>
                 </li>
                 <li data-reservation-id-status={reservation_id}>
-                    Status: {status}
+                    Status: <span className='detail status'>{status}</span>
                 </li>
                 {/* can I remove the button below? Or do the tests rely on it? */}
                 {/* below validation required? */}
                 {status === 'booked'
                     ?
                     <>
-                        <button><Link to={`/reservations/${reservation_id}/seat`}>Seat</Link></button>
-                        <button><Link to={`/reservations/${reservation_id}/edit`}>Edit</Link></button>
-                        <button data-reservation-id-cancel={reservation_id} onClick={cancelHandler}>Cancel</button>
+                        <Link to={`/reservations/${reservation_id}/seat`}><button className='seat'>Seat</button></Link>
+                        <Link to={`/reservations/${reservation_id}/edit`}><button className='edit'>Edit</button></Link>
+                        <button data-reservation-id-cancel={reservation_id} onClick={cancelHandler} className='cancel'>Cancel</button>
                     </>
                     : null}
             </ul>

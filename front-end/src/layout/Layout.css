@@ -29,6 +29,10 @@ button {
   transition-timing-function: cubic-bezier(.4,0,.2,1);
 }
 
+button:focus {
+  outline: none;
+}
+
 .detail {
   margin-left: 5px;
   color: white;
@@ -286,7 +290,7 @@ form.create button:first-of-type {
   background-color: #5adf9c;
 }
 
-form.create button:first-of-type:hover {
+form.create button:first-of-type:hover, form.create button:first-of-type:active {
   background-color: #34d685;
 }
 
@@ -295,8 +299,12 @@ form.create button:last-of-type {
   background-color: #ff5f72;
 }
 
-form.create button:last-of-type:hover {
+form.create button:last-of-type:hover, form.create button:last-of-type:active {
   background-color: #ef233c;
+}
+
+form.search input {
+  margin-top: 3px;
 }
 
 form.search button.submitSearch {
@@ -304,6 +312,6 @@ form.search button.submitSearch {
   margin-bottom: 5px;
 }
 
-form.search button.submitSearch:hover {
+form.search button.submitSearch:hover, form.search button.submitSearch:active {
   background-color: #34d685;
 }

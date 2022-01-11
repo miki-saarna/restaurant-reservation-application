@@ -354,7 +354,7 @@ form.search input {
 
 form.search button.submitSearch {
   background-color: #5adf9c;
-  margin-bottom: 5px;
+  margin: 0;
 }
 
 form.search button.submitSearch:hover, form.search button.submitSearch:active {

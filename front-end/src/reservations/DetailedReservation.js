@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { updateReservationStatus } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
 
@@ -16,13 +16,16 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
         status,
     } = reservation;
 
-    const [updateStatusError, setUpdateStatusError] = useState('')
+    const history = useHistory();
+
+    const [updateStatusError, setUpdateStatusError] = useState('');
 
     const cancelHandler = (event) => {
         event.preventDefault();
         if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
             Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
-                .then(() => setUpdateReservation(currentStatus => !currentStatus))
+                // checking if cancelling from search page or other page
+                .then(() => setUpdateReservation ? setUpdateReservation(currentStatus => !currentStatus) : history.push('/'))
                 .catch(setUpdateStatusError)
         }
     }

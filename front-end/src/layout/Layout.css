@@ -1,3 +1,5 @@
+@import url("https://use.fontawesome.com/releases/v5.13.0/css/all.css");
+
 * {
   margin: 0;
   padding: 0;
@@ -11,19 +13,101 @@
 
 li {
   list-style-type: none;
-  color: #fdfffc;
+  color: #c6d7dd;
 }
 
-.side-bar {
-  background-color: #393a44;
-  min-width: 200px;
-}
 
-.button {
+button {
   border: none;
   border-radius: 9px;
   padding: 3px 10px;
   margin-top: 5px;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+}
+
+.detail {
+  margin-left: 5px;
+  color: white;
+}
+
+hr {
+  border-color: #c8c9d6;
+  margin: 25px 0 20px;
+  
+}
+
+/* nav bar */
+
+nav {
+  background-color: rgba(1, 1, 1, 0.9);
+  padding: 5px 10px;
+}
+
+nav > ul > li {
+  margin-top: 11px;
+}
+
+nav > ul > li > a {
+  color: #f9f9f9;
+  position: relative;
+}
+
+nav > ul > li > a:hover {
+  color: #f9f9f9;
+  text-decoration: none;
+  transition: .2s; 
+  display: inline-block; 
+  transform: translateY(2px); 
+}
+
+nav > ul > li > a::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 1px;
+  bottom: -3px;
+  left: 0;
+  background-color: #f9f9f9;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+
+}
+
+nav > ul > li > a:hover::after {
+  transform: scaleX(1);
+}
+
+
+
+
+nav > ul > li > a::before {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #f9f9f9;
+  margin-right: 5px;
+}
+
+nav > ul > li:nth-child(1) a::before {
+  content: '\f14e'
+}
+
+nav > ul > li:nth-child(2) a::before {
+  content: '\f002'
+}
+
+nav > ul > li:nth-child(3) a::before {
+  content: '\f2e7'
+}
+
+nav > ul > li:nth-child(4) a::before {
+  content: '\f0fe'
 }
 
 /* reservations */
@@ -36,38 +120,39 @@ li {
 .reservation {
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 360px;
+  flex-basis: 350px;
   padding: 9px;
+  margin: 5px;
   background-color: rgba(1, 1, 1, 0.9);
   border-radius: 10px;
 }
 
 .reservation button {
-  border: none;
-  border-radius: 9px;
-  padding: 3px 10px;
   margin: 5px 8px 0 0;
-  /* color: #edf2f4;
-  background-color: #ef233c; */
 }
 
 .reservation button:hover {
-  /* color: #ef233c; */
-  background-color: white;
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
   transition-duration: .2s;
 }
 
+.status {
+  color: #34d685;
+}
+
+.seat {
+  background-color: #34d685;
+}
+
+.seat:hover {
+  background-color: #5adf9c;
+}
+
 .edit {
-  /* background-color: rgb(255, 244, 206); */
   background-color: rgba(244, 211, 94);
-  
 }
 
 .edit:hover {
-  background-color: rgb(255, 229, 136) !important;
-  color: black !important;
-  /* color: rgba(244, 211, 94) !important; */
+  background-color: rgb(255, 229, 136);
 }
 
 .cancel {
@@ -76,7 +161,7 @@ li {
 }
 
 .cancel:hover {
-  background-color: #ff5f72 !important;
+  background-color: #ff5f72;
 }
 
 
@@ -103,25 +188,19 @@ li {
   position: relative;
 }
 
-/* .table li {
-  color: #fdfffc;
-} */
-
-.table .button {
+.table button {
   color: #edf2f4;
   background-color: #ef233c;
 }
 
-.table .button:hover {
-  background-color: #edf2f4;
+.table button:hover {
   color: #ef233c;
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  background-color: #edf2f4;
   transition-duration: .3s;
 }
 
-.detail {
-  margin-left: 4px;
-  color: #99c1de;
+.free {
+  color: #34d685;
 }
 
 .occupied {
@@ -136,9 +215,12 @@ button.x {
   position: absolute;
   top: 2%;
   right: 6%;
+  padding: 0;
+  margin: 0;
 }
 
 button.x:hover {
+  background-color: transparent;
   font-size: 23px;
   color: white;
   transform: translate(7%, -12%);
@@ -160,3 +242,4 @@ button.x:active {
   transition-duration: .2s;
   text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
 }
+

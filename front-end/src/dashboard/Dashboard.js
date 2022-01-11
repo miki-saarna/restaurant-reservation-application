@@ -57,7 +57,7 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
+      <div>
         {/* is line break the best method? */}
         <h4>Reservations for date: <br/>{date}</h4>
       </div>
@@ -67,6 +67,8 @@ function Dashboard({ date }) {
         <h3>Today's reservations:</h3>
         <div className='reservations'>{reservations.length ? reservations : null}</div>
       </div>
+
+      <hr />
 
       <div>
         <h3 className='tablesTitle'>Tables:</h3>

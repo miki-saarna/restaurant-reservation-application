@@ -52,14 +52,14 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
                     People: <span className='detail'>{people}</span>
                 </li>
                 <li data-reservation-id-status={reservation_id}>
-                    Status: <span className='detail'>{status}</span>
+                    Status: <span className='detail status'>{status}</span>
                 </li>
                 {/* can I remove the button below? Or do the tests rely on it? */}
                 {/* below validation required? */}
                 {status === 'booked'
                     ?
                     <>
-                        <Link to={`/reservations/${reservation_id}/seat`}><button>Seat</button></Link>
+                        <Link to={`/reservations/${reservation_id}/seat`}><button className='seat'>Seat</button></Link>
                         <Link to={`/reservations/${reservation_id}/edit`}><button className='edit'>Edit</button></Link>
                         <button data-reservation-id-cancel={reservation_id} onClick={cancelHandler} className='cancel'>Cancel</button>
                     </>

@@ -44,11 +44,11 @@ return (
             </li>
             <li data-table-id-status={table_id}> 
                 {/* {isReserved ? <p data-table-id-status={table_id}>Occupied</p> : <p data-table-id-status={table_id}>Free</p>} */}
-                Status: <span className='detail'>{isReserved ? <span className='occupied'>Occupied</span> : 'Free'}</span>
+                Status: {isReserved ? <span className='detail occupied'>Occupied</span> : <span className='detail free'>Free</span>}
                 {/* <h4 data-table-id-status={table_id}>Status: {isReserved ? 'Occupied' : 'Free'}</h4> */}
             </li>
             {isReserved ? <button className='button' data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
-            {isReserved ? null : <button mat-button className='x' onClick={handleDelete}>x</button>}
+            {isReserved ? null : <button className='x' onClick={handleDelete}>x</button>}
         </ul>
         <ErrorAlert error={deleteError} />
     </>

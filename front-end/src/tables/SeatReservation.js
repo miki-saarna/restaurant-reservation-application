@@ -65,8 +65,8 @@ export default function SeatReservation() {
     }
 
     return (
-        <>  
-            <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}. </label>
+        <form className='create assignment'>  
+            <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}</label>
             Table number:
             <select name='table_id' id='table_id' onChange={selectHandler} >
                 {tableOptions}
@@ -75,6 +75,6 @@ export default function SeatReservation() {
             <button onClick={cancelHandler}>Cancel</button>
             {tableOptionsError.length ? <ErrorAlert error={tableOptionsError} /> : null}
             {validationError ? <ErrorAlert error={validationError} /> : null}
-        </>
+        </form>
     )
 }

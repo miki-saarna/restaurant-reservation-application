@@ -66,7 +66,7 @@ export default function EditReservation() {
 
     return (
         <>
-            <form>
+            <form className='create'>
                 <label htmlFor='first_name'>First name:</label>
                 <input
                     value={reservation.first_name || ''}

@@ -67,7 +67,6 @@ export default function SeatReservation() {
     return (
         <form className='create assignment'>  
             <label htmlFor='table_id'>Select a table to assign to reservation {reservation_id}</label>
-            Table number:
             <select name='table_id' id='table_id' onChange={selectHandler} >
                 {tableOptions}
             </select>

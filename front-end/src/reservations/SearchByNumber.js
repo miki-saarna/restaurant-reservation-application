@@ -32,7 +32,7 @@ export default function SearchByNumber() {
     }, [])
 
     return (
-        <>
+        <div className='searchPageContent'>
             <form onSubmit={submitHandler} className='search'>
                 <label htmlFor='mobile_number'>Number look up:</label>
                 <input
@@ -47,12 +47,12 @@ export default function SearchByNumber() {
                 >
                 </input>
                 <button type='submit' className='submitSearch'>Find</button>
-                {firstSearch
-                    ? reservationsByNumber.length ? reservationsByNumber.map((reservation, index) => <DetailedReservation key={index} reservation={reservation} />) : <p>No reservations found</p>
-                    : null
-                }
-                {reservationsByNumberError ? <ErrorAlert error={reservationsByNumberError} /> : null}
             </form>
-        </>
+            <div className='reservations'>{firstSearch
+                ? reservationsByNumber.length ? reservationsByNumber.map((reservation, index) => <DetailedReservation key={index} reservation={reservation} />) : <p>No reservations found</p>
+                : null
+            }</div>
+            {reservationsByNumberError ? <ErrorAlert error={reservationsByNumberError} /> : null}
+        </div>
     )
 }

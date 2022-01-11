@@ -38,10 +38,13 @@ button:focus {
   color: white;
 }
 
+main > div:first-of-type > div:last-of-type > h5{
+  white-space: nowrap;
+}
+
 hr {
   border-color: #c8c9d6;
   margin: 25px 0 20px;
-  
 }
 
 /* nav bar */
@@ -70,6 +73,7 @@ nav > ul > li:nth-child(1) {
 nav > ul > li > a {
   color: #f9f9f9;
   position: relative;
+  white-space: nowrap;
 }
 
 nav > ul > li > a:hover {
@@ -177,21 +181,31 @@ nav > ul > li:nth-child(4) a::before {
 .reservations {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
 }
 
 .reservation {
   flex-grow: 0;
   flex-shrink: 0;
-  flex-basis: 350px;
-  padding: 9px;
-  margin: 5px;
+  flex-basis: auto;
+  padding: 7px;
+  margin: 2px;
   background-color: rgba(1, 1, 1, 0.9);
   border-radius: 10px;
+  min-width: 168px;
+  box-sizing: content-box;
+}
+
+.reservation button, li {
+  font-size: 14px;
 }
 
 .reservation button {
-  margin: 5px 8px 0 0;
+  margin: 3px 5px 0 0;
+}
+
+button.cancel {
+  margin-right: 0;
 }
 
 .reservation button:hover {
@@ -233,13 +247,14 @@ nav > ul > li:nth-child(4) a::before {
 .tables {
   display: flex;
   flex-wrap: wrap;  
-  justify-content: center;
+  justify-content: start;
 }
 
 .table {
   padding: 9px;
   flex-grow: 0;
   flex-shrink: 0;
+  /* flex-basis: auto; */
   flex-basis: 170px;
   margin: 5px;
   border-radius: 10px;
@@ -307,7 +322,6 @@ button.x:active {
 
 form {
   padding: 8px 11px;
-  /* margin: 20px; */
 }
 
 label {
@@ -354,7 +368,7 @@ form.search input {
 
 form.search button.submitSearch {
   background-color: #5adf9c;
-  margin: 0;
+  margin: 0 0 5px;
 }
 
 form.search button.submitSearch:hover, form.search button.submitSearch:active {
@@ -367,4 +381,100 @@ form.assignment label {
 
 form.assignment select {
   margin: 0 18px 0 5px;
+}
+
+@media only screen and (min-width: 443px) {
+
+  .reservation {
+    padding: 9px;
+    margin: 5px;
+    min-width: 174px;
+  }
+
+  
+  .reservation li, button {
+    font-size: 16px;
+  }
+  
+  .reservation button {
+    margin: 5px 8px 0 0;
+  }
+
+  button.cancel {
+    margin-right: 0;
+  }
+}
+
+@media only screen and (min-width: 606px) {
+  #root {
+    display: flex;
+    flex-direction: row;
+  }
+
+  nav {
+    flex: 1;
+    max-width: 200px;
+    min-width: 150px;
+    min-height: 100vh;
+  }
+
+  nav ul {
+    position: relative;
+  }
+
+  nav > ul > li {
+    position: fixed;
+    margin-top: 0;
+  }
+
+  nav li:nth-of-type(1) {
+    top: 10px;
+  }
+
+  nav li:nth-of-type(2) {
+    top: 45px;
+  }
+
+  nav li:nth-of-type(3) {
+    top: 80px;
+  }
+
+  nav li:nth-of-type(4) {
+    top: 115px;
+  }
+
+  main {
+    flex: 3;
+  }
+
+  main > div:first-of-type {
+    display: flex;
+    justify-content: space-between;  
+  }
+
+  main > div:first-of-type h5 {
+    text-align: end;
+  }
+
+  .searchPageContent {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  main {
+    flex: 4
+  }
+
+  main > div:first-of-type {
+    margin: 0 3%;
+  }
+
+  @media only screen and (min-width: 1200px) {
+    #root {
+      max-width: 1350px;
+      margin: auto;
+    }
+  }
 }

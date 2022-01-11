@@ -62,7 +62,7 @@ export default function NewReservation() {
     }
 
     return (
-        <form>
+        <form className='create'>
             <label htmlFor='first_name'>
                 First name:
             </label>

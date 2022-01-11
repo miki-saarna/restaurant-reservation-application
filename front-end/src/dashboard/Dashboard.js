@@ -62,22 +62,22 @@ function Dashboard({ date }) {
         {/* is line break the best method? */}
         <h5>Reservations for date: <br/>{date}</h5>
       </div>
-      
+
       <ErrorAlert error={APIRequestError} />
 
       <hr />
 
-      <div>
+      <section>
         <h3>Today's reservations:</h3>
         <div className='reservations'>{reservations.length ? reservations : null}</div>
-      </div>
+      </section>
 
       <hr />
 
-      <div>
-        <h3 className='tablesTitle'>Tables:</h3>
+      <section>
+        <h3>Tables:</h3>
         <div className='tables'>{tables.length ? tables : null}</div>
-      </div>
+      </section>
 
     </main>
   );

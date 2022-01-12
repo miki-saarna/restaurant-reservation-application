@@ -68,12 +68,13 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
-export async function createReservation(reservation, signal) {
+export async function createReservation(reservation, timezoneOffset, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: reservation }),
+    body: JSON.stringify({ data: reservation, timezoneOffset: timezoneOffset}),
+    // body: JSON.stringify({ data: [reservation, timezoneOffset] }),
     signal,
   }
   return await fetchJson(url, options, {});
@@ -140,12 +141,12 @@ export async function deleteSeatAssignment(table_id, signal) {
   return await fetchJson(url, options, {});
 }
 
-export async function editReservation(reservation, signal) {
+export async function editReservation(reservation, timezoneOffset, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation.reservation_id}`)
   const options = {
     method: "PUT",
     headers,
-    body:JSON.stringify({ data: reservation }),
+    body:JSON.stringify({ data: reservation, timezoneOffset: timezoneOffset }),
     signal,
   }
   return await fetchJson(url, options, {})

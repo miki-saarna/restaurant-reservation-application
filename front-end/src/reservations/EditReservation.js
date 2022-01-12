@@ -13,6 +13,7 @@ export default function EditReservation() {
     const [reservation, setReservation] = useState({});
     const [frontendValidationError, setFrontendValidationError] = useState('');
     const [reservationLookUpError, setReservationLookUpError] = useState('');
+    const [reservationEditError, setReservationEditError] = useState('');
     
     useEffect(() => {
         async function fetchreservations() {
@@ -49,14 +50,19 @@ export default function EditReservation() {
             return
         }
         // // front-end validation for reservation date and time. If true (validation fails), return to stop function from executing API call
-        if (reservationTimeValidator(setFrontendValidationError, reservation.reservation_date, reservation.reservation_time)) {
-            return
+        // if (reservationTimeValidator(setFrontendValidationError, reservation.reservation_date, reservation.reservation_time)) {
+        //     return
+        // }
+
+        const timezoneOffset = reservationTimeValidator(setFrontendValidationError, reservation.reservation_date, reservation.reservation_time);
+        if (!timezoneOffset) {
+            return;
         }
 
-        editReservation(reservation)
+        editReservation(reservation, timezoneOffset)
             .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
             // .then(() => history.goBack())
-            .catch(console.error);
+            .catch(setReservationEditError);
     }
 
     const cancelHandler = (event) => {
@@ -129,9 +135,10 @@ export default function EditReservation() {
                 ></input>
                 <button type='submit' onClick={submitHandler}>Submit</button>
                 <button type='submit' onClick={cancelHandler}>Cancel</button>
+                <ErrorAlert error={frontendValidationError} />
+                <ErrorAlert error={reservationLookUpError} />
+                <ErrorAlert error={reservationEditError} />
             </form>
-            <ErrorAlert error={frontendValidationError} />
-            <ErrorAlert error={reservationLookUpError} />
         </>
     )
 }

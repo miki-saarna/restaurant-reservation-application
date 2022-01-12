@@ -38,7 +38,6 @@ const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 //   next();
 // }
 
-// is there a difference between using this method and simplifying this by removing the try/catch?
 async function reservationExists(req, res, next) {
   const { reservationId } = req.params;
   try {
@@ -55,7 +54,6 @@ async function reservationExists(req, res, next) {
     next(error);
   } 
 }
-
 
 async function list(req, res) {
   const { reservation_id, date, mobile_number } = req.query;
@@ -85,7 +83,6 @@ async function create(req, res) {
 async function edit(req, res) {
   const { data } = req.body;
   const edittedReservation = await service.edit(data)
-  console.log(edittedReservation)
   res.json({ data: edittedReservation})
 }
 

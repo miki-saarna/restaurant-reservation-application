@@ -29,7 +29,6 @@ function Menu() {
           </li>
           <li>
             <Link to="/tables/new">
-            {/* &nbsp; */}
               New Table
             </Link>
           </li>

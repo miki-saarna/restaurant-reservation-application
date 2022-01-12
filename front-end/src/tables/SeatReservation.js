@@ -22,11 +22,8 @@ export default function SeatReservation() {
             const abortController = new AbortController();
             try {
                 const tables = await listTables(abortController.signal);
-                // const tables = await listTables(abortController.signal);
                 const listOutTables = tables.map((table) => tableOption(table));
-                // const listOutTables = tables.filter((table) => !table.reservation_id).map((table) => tableOption(table));
                 setTableOptions(listOutTables);
-                // maybe not the best solution to use key?
                 setSelected(listOutTables[0].key)
             } catch (error) {
                 setTableOptionsError(error);
@@ -37,9 +34,6 @@ export default function SeatReservation() {
     }, []);
 
     const selectHandler = () => {
-        // unsure if this is the best way to obtain the value of table_id
-        // console.log(document.getElementById('table_id'))
-        // console.log(document.getElementById('table_id').value)
         const tableId = document.getElementById('table_id').value;
         setSelected(tableId);
     }
@@ -48,12 +42,8 @@ export default function SeatReservation() {
     const submitHandler = (event) => {
         event.preventDefault();
         assignReservationToTable(selected, reservation_id)
-        // Promise.all([listReservations({ reservation_id }), assignReservationToTable(selected, reservation_id)])
             .then(() => {
                 setSelected(null);
-                // return history.goBack();
-                // return history.push(`/dashboard`);
-                // fails validation
                 return history.push('/')
             })
             .catch(setValidationError)

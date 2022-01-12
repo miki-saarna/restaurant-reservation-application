@@ -1,8 +1,3 @@
-
-
-
-
-
 function mergeSort(compare, elements) {
     if (Array.isArray(elements)) {
       if (elements.length <= 1) {

@@ -31,11 +31,9 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [APIRequestError, setAPIRequestError] = useState(null);
-  // used to re-render list of reservations that are displayed
   const [updateReservation, setUpdateReservation] = useState(false);
   const [updateTables, setUpdateTables] = useState(false);
   
-  // useEffect(loadDashboard, [newDate, updateReservation, updateTables]);
   
   useEffect(() => {
     const abortController = new AbortController();
@@ -73,7 +71,7 @@ function Dashboard({ date }) {
 
       <div>
         <h2>Dashboard</h2>
-        {/* is line break the best method? */}
+        
         <div>
           <h5>Reservations for date:</h5>
           <h5>{newDate}</h5>

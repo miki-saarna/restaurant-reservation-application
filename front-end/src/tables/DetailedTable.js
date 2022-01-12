@@ -7,20 +7,17 @@ export default function DetailedTable({ table, setUpdateReservation, setUpdateTa
     const { table_id, table_name, capacity, reservation_id = null } = table;
 
     const [isReserved, setIsReserved] = useState(() => reservation_id ? true : false);
-    // const [deleteSeatAssignmentError, setDeleteSeatAssignmentError] = useState('');
     const [deleteError, setDeleteError] = useState('');
 
     const handleFinish = (event) => {
         event.preventDefault();
         if (window.confirm("Is this table ready to seat new guests? This cannot be undone")) {
-            // Promise.resolve(deleteSeatAssignment(table_id))
             Promise.resolve(deleteSeatAssignment(table_id))
                 .then(() => {
                     setUpdateReservation(currentStatus => !currentStatus)
                     setIsReserved(false)
                 })
                 .catch(setDeleteError)
-                // .catch(setDeleteSeatAssignmentError)
         }
     }
 
@@ -43,9 +40,7 @@ return (
                 Capacity: <span className='detail'>{capacity}</span>
             </li>
             <li data-table-id-status={table_id}> 
-                {/* {isReserved ? <p data-table-id-status={table_id}>Occupied</p> : <p data-table-id-status={table_id}>Free</p>} */}
                 Status: {isReserved ? <span className='detail occupied'>Occupied</span> : <span className='detail free'>Free</span>}
-                {/* <h4 data-table-id-status={table_id}>Status: {isReserved ? 'Occupied' : 'Free'}</h4> */}
             </li>
             {isReserved ? <button className='button' data-table-id-finish={table_id} onClick={handleFinish}>Finish</button> : null}
             {isReserved ? null : <button className='x' onClick={handleDelete}>x</button>}

@@ -33,9 +33,6 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
     return (
         <>
             <ul className='reservation'>
-                {/* <li>
-                    Reservation ID: <span className='detail'>{reservation_id}
-                </li> */}
                 <li>
                     First name: <span className='detail'>{first_name}</span>
                 </li>

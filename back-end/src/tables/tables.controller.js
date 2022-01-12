@@ -74,8 +74,6 @@ function tableIsOccupied(req, res, next) {
 
 async function list(req, res) {
     const data = await service.list();
-    // below not needed...
-    // const sortedData = mergeSort(compareByTableName, data);
     res.json({ data })
 }
 

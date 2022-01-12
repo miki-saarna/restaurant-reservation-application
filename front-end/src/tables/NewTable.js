@@ -36,13 +36,7 @@ export default function NewTable() {
         if(tableFormatValidator(setFrontendValidationError, formData)) {
             return
         }
-        // if (formData.table_name.length < 2) {
-        //     return setValidationError(`Table name must be at least 2 characters in length.`)
-        // }
-
-        // if (formData.capacity < 1) {
-        //     return setValidationError(`Capacity must be 1 person or greater.`)
-        // }
+        
         createTable(formData)
         .then(() => {
             setFormData(initialFormState);

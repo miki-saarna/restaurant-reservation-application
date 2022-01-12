@@ -134,9 +134,7 @@ export async function deleteSeatAssignment(table_id, signal) {
   const options = {
     method: "DELETE",
     headers,
-    // do I just do null???
     body: null,
-    // body: JSON.stringify({ data: { reservation_id } }),
     signal,
   }
   return await fetchJson(url, options, {});

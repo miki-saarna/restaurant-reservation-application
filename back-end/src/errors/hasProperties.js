@@ -11,7 +11,6 @@ function hasProperties(...properties) {
                     throw error;
                 }
             })
-            // res.locals.data = data
             next();
         } catch (error) {
             next(error)

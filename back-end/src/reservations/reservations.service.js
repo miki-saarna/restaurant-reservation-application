@@ -64,7 +64,6 @@ async function edit(edittedReservation) {
     return knex('reservations')
         .update(edittedReservation, '*')
         .where('reservation_id', edittedReservation.reservation_id)
-        // is returning needed?
         .returning('*')
         .then((editted) => editted[0])
 

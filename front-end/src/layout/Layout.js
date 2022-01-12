@@ -13,10 +13,10 @@ import "./Layout.css";
  */
 function Layout() {
   return (
-    <>
+    <div className='contentArea'>
       <Menu />
       <Routes />
-    </>
+    </div>
   );
 }
 

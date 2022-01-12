@@ -42,12 +42,13 @@ export default function NewReservation() {
             return
         }
         // // front-end validation for reservation date and time. If true (validation fails), return to stop function from executing API call
-        if (reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)) {
-            return
+        const timezoneOffset = reservationTimeValidator(setFrontendValidationError, formData.reservation_date, formData.reservation_time)
+        if (!Number.isInteger(timezoneOffset)) {
+            return;
         }
 
         // API call
-        createReservation(formData)
+        createReservation(formData, timezoneOffset)
             .then(() => {
                 setFormData(initialFormState)
                 return history.push(`/dashboard?date=${formData.reservation_date}`)
@@ -55,7 +56,6 @@ export default function NewReservation() {
             .catch(setValidationError);
     }
     
-
     const cancelHandler = (event) => {
         event.preventDefault();
         return history.goBack();

@@ -90,7 +90,7 @@ function Dashboard({ date }) {
       <hr />
 
       <section>
-        <h3>Today's reservations:</h3>
+        <h3>Reservations:</h3>
         <div className='reservations'>{reservations.length ? reservations : null}</div>
       </section>
 

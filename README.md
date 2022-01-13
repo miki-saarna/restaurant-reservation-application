@@ -18,7 +18,7 @@ This application can be viewed here: [restaurant-reservation-application.vercel.
 
 The backend API is currently running here: [restaurant-reservation-application-server.vercel.app](restaurant-reservation-application-server.vercel.app)
 
-Both the client and server are hosted on [Vercel](https://vercel.com/) with the SQL Database hosted by [ElephantSQL](https://www.elephantsql.com/)
+Both the client and server are hosted on [Vercel](https://vercel.com/) with the SQL Databases hosted by [ElephantSQL](https://www.elephantsql.com/)
 
 ## Description
 
@@ -29,7 +29,7 @@ This application provides restaurants with an efficient reservation booking syst
 
 This application's front-end is built on React using React-Router and React hooks and styling was added through Vanilla CSS. An API was created at `./front-end/src/utils/api.js`. This API handles all promises necessary to interact with the back-end API database.
 
-The application's back-end is built on Express.js, Knex.js, and PostgreSQL servers. Express handles all middleware requests and responses including validation errors while Knex queries mapped to CRUDL operations interact directly with the PostgreSQL databases. Knex is also used to configure table migrations.
+The application's back-end is built on Express.js, Knex.js, and PostgreSQL servers and utilizing RESTful APIs. Express handles all middleware requests and responses including validation errors while Knex queries mapped to CRUDL operations interact directly with the PostgreSQL databases. Knex is also used to configure table migrations.
 
 The Express CORS package is used to provide an extra layer of security by only allowing specified domains to access the back-end API.
 
@@ -53,7 +53,7 @@ The Express CORS package is used to provide an extra layer of security by only a
 4. Update the newly created `.env` file in the `./back-end` directory with the connection URLs to your SQL database instance
 5. Run `cp ./front-end/.env.sample ./front-end/.env`
 6. The newly created `.env` file in the `./front-end` directory does not need to be editted, unless you wish to connect to the backend at a location other than `http://localhost:5000`
-7. On line 20 of the `./back-end/src/app.js` file, change the second argument of the `res.header` function to where the front-end of the application is located at
+7. On line 20 of the `./back-end/src/app.js` file, change the second argument of the `res.header` function to the location where you plan to run the front-end of the application
 8. Run `npm install` to install project dependencies
 9. Run `npm start` to start your server
 

@@ -491,13 +491,11 @@ form.assignment select {
   }
 
   @media only screen and (min-width: 1200px) {
-     #root {
-      /* background-color: rgba(1, 1, 1, 0.9); */
-    } 
-
     .contentArea {
       max-width: 1350px;
       margin: auto;
+      border-right: 1px solid lightgrey;
+      border-left: 1px solid lightgrey;
     }
   }
 }

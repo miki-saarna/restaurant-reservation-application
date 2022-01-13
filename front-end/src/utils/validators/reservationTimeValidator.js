@@ -2,7 +2,7 @@ export default function reservationTimeValidator(setFrontendValidationError, dat
     // get present time in UTC
     const presentDate = new Date();
     // get timezone offset in ms
-    // const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;
+    const timezoneOffset = presentDate.getTimezoneOffset() * 60000;
     // get present date/time with timezone consideration
     // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
     // const presentDate = new Date(presentDateUTC.getTime() - timezoneOffset);
@@ -20,10 +20,10 @@ export default function reservationTimeValidator(setFrontendValidationError, dat
     // const reservationDate = new Date(reservationDateUTC.getTime() - timezoneOffset)
     
     // validation if reservation date is in the past
-    if (reservationDate - presentDate < 0) {
-      setFrontendValidationError({ message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
-      return true;
-    }
+    // if (reservationDate - presentDate < 0) {
+    //   setFrontendValidationError({ message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
+    //   return true;
+    // }
   
     // validation if reservation is on a tuesday
     if (reservationDate.getDay() === 2) {
@@ -41,4 +41,6 @@ export default function reservationTimeValidator(setFrontendValidationError, dat
       setFrontendValidationError({ message: `Please make a reservation at least 1 hour prior to closing. The restaurant closes at 10:30 PM.`})
       return true;
     }
+
+    return timezoneOffset;
 }

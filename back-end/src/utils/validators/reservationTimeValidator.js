@@ -1,10 +1,11 @@
 function reservationTimeValidator() {
     return function(req, res, next) {
-        const { data } = req.body;
+        const { data, timezoneOffset } = req.body;
+        console.log(timezoneOffset)
         // get present time in UTC
         const presentDateUTC = new Date();
         // get timezone offset in ms
-        const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;
+        // const timezoneOffset = presentDateUTC.getTimezoneOffset() * 60000;
         // get present date/time with timezone consideration
         // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
         const presentDate = new Date(presentDateUTC.getTime() - timezoneOffset);
@@ -16,11 +17,10 @@ function reservationTimeValidator() {
         // separate hour, minute, second
         const timeArray = data.reservation_time.split(':')
         
-        const reservationDateUTC = new Date(...dateArray, ...timeArray);
+        const reservationDate = new Date(...dateArray, ...timeArray);
         // get reservation date/time with timezone consideration
         // use getTime() method to convert to ms, which will allow us to subtract the timezoneOffset
-        const reservationDate = new Date(reservationDateUTC.getTime() - timezoneOffset)
-        
+        // const reservationDate = new Date(reservationDateUTC.getTime() - timezoneOffset)
         
         // validation if reservation date is in the past
         if (reservationDate - presentDate < 0) {
@@ -28,7 +28,7 @@ function reservationTimeValidator() {
         }
     
         // validation if reservation is on a tuesday
-        if (reservationDateUTC.getDay() === 2) {
+        if (reservationDate.getDay() === 2) {
           return next({ status: 400, message: `Our restaurant is closed on Tuesday to allow the employees time to rest and enjoy their day.`})
         }
     

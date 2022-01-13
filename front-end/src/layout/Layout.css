@@ -425,7 +425,7 @@ form.assignment select {
 }
 
 @media only screen and (min-width: 606px) {
-  #root {
+  .contentArea {
     display: flex;
     flex-direction: row;
   }
@@ -491,7 +491,11 @@ form.assignment select {
   }
 
   @media only screen and (min-width: 1200px) {
-    #root {
+     #root {
+      /* background-color: rgba(1, 1, 1, 0.9); */
+    } 
+
+    .contentArea {
       max-width: 1350px;
       margin: auto;
     }

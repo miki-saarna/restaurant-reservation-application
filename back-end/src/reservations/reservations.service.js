@@ -1,7 +1,7 @@
-const knex = require('../db/connection');
+module.exports = db => {
 
 async function list() {
-    return knex('reservations')
+    return db('reservations')
         .select('*')
         .whereIn('status', ['booked', 'seated'])
         // .orderBy("reservation_date")
@@ -9,7 +9,7 @@ async function list() {
 }
 
 async function readByDate(date) {
-    return knex('reservations')
+    return db('reservations')
         .select('*')
         .where('reservation_date', date)
         .whereIn('status', ['booked', 'seated'])
@@ -17,7 +17,7 @@ async function readByDate(date) {
 }
 
 async function readByNumber(mobile_number) {
-    return knex('reservations')
+    return db('reservations')
         .whereRaw(
             "translate(mobile_number, '() -', '') like ?",
             `%${mobile_number.replace(/\D/g, "")}%`
@@ -26,34 +26,34 @@ async function readByNumber(mobile_number) {
 }
 
 async function readByReservationId(reservation_id) {
-    return knex('reservations')
+    return db('reservations')
         .where({ reservation_id })
         .returning('*')
         .then(foundReservation => foundReservation[0])
 }
 
 async function read(reservation_id) {
-    return knex('reservations')
+    return db('reservations')
         .select('*')
         .where({ reservation_id })
         .then((foundReservation) => foundReservation[0])
 }
 
 async function create(newReservation) {
-    return knex('reservations')
+    return db('reservations')
         .insert(newReservation)
         .returning('*')
         .then(createdReservation => createdReservation[0])
 }
 
 async function destroy(id) {
-    return knex('reservations')
+    return db('reservations')
         .del()
         .where('reservation_id', id)
 }
 
 async function updateStatus(reservation_id, status) {
-    return knex('reservations')
+    return db('reservations')
         .update({ status })
         .where({ reservation_id })
         .returning('*')
@@ -61,7 +61,7 @@ async function updateStatus(reservation_id, status) {
 }
 
 async function edit(edittedReservation) {
-    return knex('reservations')
+    return db('reservations')
         .update(edittedReservation, '*')
         .where('reservation_id', edittedReservation.reservation_id)
         .returning('*')
@@ -69,7 +69,7 @@ async function edit(edittedReservation) {
 
 }
 
-module.exports = {
+return {
     list,
     readByDate,
     readByNumber,
@@ -79,4 +79,6 @@ module.exports = {
     destroy,
     updateStatus,
     edit
+}
+
 }

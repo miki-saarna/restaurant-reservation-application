@@ -1,26 +1,26 @@
-const knex = require('../db/connection');
+module.exports = db => {
 
 function list() {
-    return knex('tables')
+    return db('tables')
         .select('*')
         .orderBy('table_name')
 }
 
 function create(newTable) {
-    return knex('tables')
+    return db('tables')
         .insert(newTable)
         .returning('*')
         .then((createdTable) => createdTable[0]);
 }
 
 function update(table_id, reservation_id) {
-    return knex.transaction(function(trx) {
-        knex('tables')
+    return db.transaction(function(trx) {
+        db('tables')
             .update({ reservation_id })
             .where({ table_id })
             .transacting(trx)
             .then(() => {
-                return knex('reservations')
+                return db('reservations')
                     .update('status', 'seated')
                     .where({ reservation_id })
             })
@@ -34,13 +34,13 @@ function update(table_id, reservation_id) {
 
 
 function unseat(table_id, reservation_id) {
-    return knex.transaction(function(trx) {
-        knex('tables')
+    return db.transaction(function(trx) {
+        db('tables')
             .update('reservation_id', null)
             .where({ table_id })
             .transacting(trx)
             .then(() => {
-                return knex('reservations')
+                return db('reservations')
                     .update('status', 'finished')
                     .where({ reservation_id });
             })
@@ -53,29 +53,26 @@ function unseat(table_id, reservation_id) {
 }
 
 function findReservation(reservation_id) {
-    return knex('reservations')
+    return db('reservations')
         .select('*')
         .where({ reservation_id })
         .then(reservationFound => reservationFound[0])
 }
 
 function read(table_id) {
-    return knex('tables')
+    return db('tables')
         .select('*')
         .where({ table_id })
         .then((tableFound) => tableFound[0])
 }
 
 async function destroy(table_id) {
-    return knex('tables')
+    return db('tables')
         .del()
         .where({ table_id })
 }
 
-
-
-
-module.exports = {
+return {
     list,
     create,
     update,
@@ -83,4 +80,6 @@ module.exports = {
     read,
     unseat,
     destroy
+}
+
 }

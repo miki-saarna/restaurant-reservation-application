@@ -29,7 +29,7 @@ const hasRequiredProperties = hasProperties(...REQUIRED_PROPERTIES);
 
 async function tableExists(req, res, next) {
     const { table_id } = req.params;
-    const tableFound = await service.read(table_id);
+    const tableFound = await service(req.app.get('db')).read(table_id);
     if (!tableFound) return next({ status: 404, message: `Cannot find table with ID: '${table_id}'`});
     res.locals.table_id = table_id;
     res.locals.table = tableFound;
@@ -42,7 +42,7 @@ async function reservationExists(req, res, next) {
         return next({ status: 400, message: `reservation_id field is missing.`})
     }
 
-    const foundReservation = await service.findReservation(reservation_id);
+    const foundReservation = await service(req.app.get('db')).findReservation(reservation_id);
     if (!foundReservation) {
         return next({ status: 404, message: `Reservation with ID '${reservation_id}' does not exist.`})
     }
@@ -73,7 +73,7 @@ function tableIsOccupied(req, res, next) {
 }
 
 async function list(req, res) {
-    const data = await service.list();
+    const data = await service(req.app.get('db')).list();
     res.json({ data })
 }
 
@@ -84,7 +84,7 @@ async function read(req, res) {
 
 async function create(req, res) {
     const data = res.locals.data
-    const newTable = await service.create(data);
+    const newTable = await service(req.app.get('db')).create(data);
     res.status(201).json({ data: newTable })
 }
 
@@ -98,7 +98,7 @@ async function update(req, res, next) {
     // checking if currently selected table is occupied
     if (table.reservation_id) return next({ status: 400, message: `This table is currently occupied.`})
 
-    const tableAssignedToReservation = await service.update(table.table_id, foundReservation.reservation_id)
+    const tableAssignedToReservation = await service(req.app.get('db')).update(table.table_id, foundReservation.reservation_id)
     res.json({ data: tableAssignedToReservation })
 }
 
@@ -106,7 +106,7 @@ async function update(req, res, next) {
 async function unseat(req, res) {
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation_id;
-    const data = await service.unseat(table_id, reservation_id);
+    const data = await service(req.app.get('db')).unseat(table_id, reservation_id);
     // error occures if not responding with data... initially used status code 204, but tests fail...
     // res.sendStatus(200);
     res.json({ data })
@@ -114,7 +114,7 @@ async function unseat(req, res) {
 
 async function destroy(req, res) {
     const table_id = res.locals.table_id;
-    await service.destroy(table_id);
+    await service(req.app.get('db')).destroy(table_id);
     res.sendStatus(204)
 }
 

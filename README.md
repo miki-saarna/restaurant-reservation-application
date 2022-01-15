@@ -122,7 +122,7 @@ A successful submission will redirect the user to the `/dashboard?date=YYYY-MM-D
 
 ## Edit Reservation
 
-Clicking the "Edit" button found on reservations leads the user to the edit reservation page. Any and all fields can be editted, but upon submission, front-end and back-end validation will check for validity of the updated reservation and provide submission errors if any. 
+Clicking the "Edit" button found on reservations leads the user to the edit reservation page. This page uses the exact same file as the Create Reservation page due to having many similaries). Any and all fields can be editted, but upon submission, front-end and back-end validation will check for validity of the updated reservation and provide submission errors if any. 
 
 Just like the reservation creation page, upon submission, the user will be redirected to `/dashboard?date=YYYY-MM-DD` corresponding to the `reservation_date` of the editted reservation. The cancel button returns the user to the previous page.
 

@@ -49,7 +49,7 @@ export default function SearchByNumber() {
                 <button type='submit' className='submitSearch'>Find</button>
             </form>
             <div className='reservations'>{firstSearch
-                ? reservationsByNumber.length ? reservationsByNumber.map((reservation, index) => <DetailedReservation key={index} reservation={reservation} />) : <p>No reservations found</p>
+                ? reservationsByNumber.length ? reservationsByNumber.map((reservation) => <DetailedReservation key={reservation.reservation_id} reservation={reservation} />) : <p>No reservations found</p>
                 : null
             }</div>
             {reservationsByNumberError ? <ErrorAlert error={reservationsByNumberError} /> : null}

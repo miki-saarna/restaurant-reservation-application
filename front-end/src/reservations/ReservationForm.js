@@ -1,48 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { listReservations, createReservation, editReservation } from '../utils/api';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { createReservation, editReservation } from '../utils/api';
 import ErrorAlert from '../layout/ErrorAlert';
 import reservationTimeValidator from '../utils/validators/reservationTimeValidator';
 import reservationFormatValidator from '../utils/validators/reservationFormatValidator';
+import { initialFormState } from '../utils/initialformState';
 
-export default function CreateOrEditReservation() {
-
-    const { reservation_id } = useParams();
+export default function ReservationForm({ action, reservation, setReservation }) {
     const history = useHistory();
-
-    const initialFormState = {
-        first_name: '',
-        last_name: '',
-        mobile_number: '',
-        reservation_date: '',
-        reservation_time: '',
-        people: ''
-    }
     
-    const [reservation, setReservation] = useState(initialFormState);
+    const {
+        first_name,
+        last_name,
+        mobile_number,
+        reservation_date,
+        reservation_time,
+        people
+    } = reservation;
+
     const [frontendValidationError, setFrontendValidationError] = useState('');
-    const [reservationCreationError, setReservationCreationError] = useState('');
-    const [reservationLookUpError, setReservationLookUpError] = useState('');
     const [reservationEditError, setReservationEditError] = useState('');
-    
-
-    useEffect(() => {
-        if (reservation_id) {
-        async function fetchreservations() {
-            const abortController = new AbortController();
-            try {
-                const data = await listReservations({ reservation_id }, abortController.signal)
-                setReservation(data)
-            } catch(error) {
-                setReservationLookUpError(error)
-            }
-            return () => abortController.abort();
-        }
-        fetchreservations();
-        // don't need reservation_id as dependency, but get warning otherwise
-        }
-    }, [reservation_id])
-
+    const [reservationCreationError, setReservationCreationError] = useState('');
 
     const changeHandler = ({ target: { name, value } }) => {
         if (value && name === 'people') {
@@ -70,25 +48,34 @@ export default function CreateOrEditReservation() {
         }
 
         // API call
-        if (reservation_id) {
-            editReservation(reservation, timezoneOffset)
-                .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
-                // .then(() => history.goBack())
-                .catch(setReservationEditError);
-        } else {
+        if (action === 'create') {
             createReservation(reservation, timezoneOffset)
                 .then(() => {
                     setReservation(initialFormState)
                     return history.push(`/dashboard?date=${reservation.reservation_date}`)
                 })
                 .catch(setReservationCreationError);
+        } else {
+            editReservation(reservation, timezoneOffset)
+            .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
+            // .then(() => history.goBack())
+            .catch(setReservationEditError);
         }
     }
-    
+
     const cancelHandler = (event) => {
         event.preventDefault();
         return history.goBack();
     }
+
+    const errorsArray = [];
+    const potentialErrors = [frontendValidationError, reservationCreationError, reservationEditError];
+    potentialErrors.forEach((potentialError) => {
+        if (potentialError) {
+            errorsArray.push(potentialError);
+        }
+    })
+    const listOfErrorFunctions = errorsArray.map((error, index) => <ErrorAlert key={index} error={error} />);
 
     return (
         <form className='create'>
@@ -98,7 +85,7 @@ export default function CreateOrEditReservation() {
                 id='first_name'
                 required
                 onChange={changeHandler}
-                value={reservation.first_name}
+                value={first_name}
                 type='text'
                 >
             </input>
@@ -109,7 +96,7 @@ export default function CreateOrEditReservation() {
                 id='last_name'
                 required
                 onChange={changeHandler}
-                value={reservation.last_name}
+                value={last_name}
                 type='text'
                 >
             </input>
@@ -120,9 +107,8 @@ export default function CreateOrEditReservation() {
                 id='mobile_number'
                 required
                 onChange={changeHandler}
-                value={reservation.mobile_number}
+                value={mobile_number}
                 type='text'
-                // type='number'
                 >
             </input>
 
@@ -132,7 +118,7 @@ export default function CreateOrEditReservation() {
                 id='reservation_date'
                 required
                 onChange={changeHandler}
-                value={reservation.reservation_date}
+                value={reservation_date}
                 type='date'
                 >
             </input>
@@ -143,7 +129,7 @@ export default function CreateOrEditReservation() {
                 id='reservation_time'
                 required
                 onChange={changeHandler}
-                value={reservation.reservation_time}
+                value={reservation_time}
                 type='time'
                 >
             </input>
@@ -154,21 +140,15 @@ export default function CreateOrEditReservation() {
                 id='people'
                 required
                 onChange={changeHandler}
-                value={reservation.people}
+                value={people}
                 type='number'
                 >
             </input>
 
             <button type='submit' onClick={submitHandler}>Submit reservation</button>
             <button type='submit' onClick={cancelHandler}>Cancel</button>
-        
-            <ErrorAlert error={reservationLookUpError} />
-            <ErrorAlert error={frontendValidationError} />
-            <ErrorAlert error={reservationCreationError} />
-            <ErrorAlert error={reservationEditError} />
-            {/* {frontendValidationError.length ? <><p>Please do not leave any value(s) blank:</p><ul>{blankFields.map((error, index) => <li key={index}>{error}</li>)}</ul></> : null} */}
-            {/* line below not neccesary for tests? */}
-            {/* {validationError ? <div className="alert alert-danger">Error: {validationError.message}</div> : null} */}
+
+            {listOfErrorFunctions}
         </form>
-    )
+)
 }

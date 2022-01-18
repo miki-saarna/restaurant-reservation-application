@@ -70,6 +70,7 @@ function Dashboard({ date }) {
     <main>
 
       <div>
+        <h1>Periodic Tables</h1>
         <h2>Dashboard</h2>
         
         <div>

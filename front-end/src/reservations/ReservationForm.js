@@ -48,19 +48,21 @@ export default function ReservationForm({ action, reservation, setReservation })
         }
 
         // API call
+        const abortController = new AbortController();
         if (action === 'create') {
-            createReservation(reservation, timezoneOffset)
+            createReservation(reservation, timezoneOffset, abortController.signal)
                 .then(() => {
                     setReservation(initialFormState)
                     return history.push(`/dashboard?date=${reservation.reservation_date}`)
                 })
                 .catch(setReservationCreationError);
         } else {
-            editReservation(reservation, timezoneOffset)
+            editReservation(reservation, timezoneOffset, abortController.signal)
             .then(() => history.push(`/dashboard?date=${reservation.reservation_date}`))
             // .then(() => history.goBack())
             .catch(setReservationEditError);
         }
+        return () => abortController.abort();
     }
 
     const cancelHandler = (event) => {

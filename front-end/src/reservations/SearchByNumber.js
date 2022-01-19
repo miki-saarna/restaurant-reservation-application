@@ -17,10 +17,12 @@ export default function SearchByNumber() {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        const abortController = new AbortController();
         setFirstSearch(true);
-        Promise.resolve(listReservations({ mobile_number: number }))
+        Promise.resolve(listReservations({ mobile_number: number }, abortController.signal))
             .then(setReservationsByNumber)
-            .catch(setReservationsByNumberError)
+            .catch(setReservationsByNumberError);
+        return () => abortController.abort();
     }
 
     useEffect(() => {

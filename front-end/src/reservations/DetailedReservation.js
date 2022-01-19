@@ -22,11 +22,13 @@ export default function DetailedReservation({ reservation, setUpdateReservation 
 
     const cancelHandler = (event) => {
         event.preventDefault();
+        const abortController = new AbortController();
         if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
-            Promise.resolve(updateReservationStatus(reservation_id, 'cancelled'))
+            Promise.resolve(updateReservationStatus(reservation_id, 'cancelled', abortController.signal))
                 // checking if cancelling from search page or other page
                 .then(() => setUpdateReservation ? setUpdateReservation(currentStatus => !currentStatus) : history.push('/'))
-                .catch(setUpdateStatusError)
+                .catch(setUpdateStatusError);
+            return () => abortController.abort();
         }
     }
 

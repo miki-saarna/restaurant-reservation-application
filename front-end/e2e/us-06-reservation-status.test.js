@@ -4,7 +4,7 @@ const fs = require("fs");
 const fsPromises = fs.promises;
 
 const { containsText } = require("./utils");
-const { createReservation, createTable, seatReservation } = require("./api");
+const { createReservation, createTable } = require("./api");
 
 const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -13,7 +13,7 @@ const onPageConsole = (msg) =>
     console.log(`<LOG::page console ${msg.type()}>`, ...eventJson)
   );
 
-describe("US-06 - Reservation status - E2E", () => {
+describe("US-05 - Finish an occupied table - E2E", () => {
   let page;
   let browser;
 
@@ -33,9 +33,9 @@ describe("US-06 - Reservation status - E2E", () => {
 
     beforeEach(async () => {
       reservation = await createReservation({
-        first_name: "Status",
+        first_name: "Finish",
         last_name: Date.now().toString(10),
-        mobile_number: "555-1313",
+        mobile_number: "800-555-1313",
         reservation_date: "2035-01-01",
         reservation_time: "13:45",
         people: 4,
@@ -44,6 +44,7 @@ describe("US-06 - Reservation status - E2E", () => {
       table = await createTable({
         table_name: `#${Date.now().toString(10)}`,
         capacity: 99,
+        reservation_id: reservation.reservation_id,
       });
 
       page = await browser.newPage();
@@ -55,64 +56,27 @@ describe("US-06 - Reservation status - E2E", () => {
       await page.reload({ waitUntil: "networkidle0" });
     });
 
-    test("/dashboard displays status", async () => {
+    test("clicking finish button and then clicking OK makes that table available", async () => {
       await page.screenshot({
-        path: ".screenshots/us-06-dashboard-displays-status.png",
+        path: ".screenshots/us-05-dashboard-finish-button-before.png",
         fullPage: true,
       });
 
-      const containsBooked = await containsText(
+      const containsOccupied = await containsText(
         page,
-        `[data-reservation-id-status="${reservation.reservation_id}"]`,
-        "booked"
+        `[data-table-id-status="${table.table_id}"]`,
+        "occupied"
       );
 
-      expect(containsBooked).toBe(true);
-    });
-
-    test("Seating the reservation changes status to 'seated' and hides Seat button", async () => {
-      await page.screenshot({
-        path: ".screenshots/us-06-seated-before.png",
-        fullPage: true,
-      });
-
-      await seatReservation(reservation.reservation_id, table.table_id);
-
-      await page.reload({ waitUntil: "networkidle0" });
-
-      await page.screenshot({
-        path: ".screenshots/us-06-seated-after.png",
-        fullPage: true,
-      });
-
-      const containsSeated = await containsText(
-        page,
-        `[data-reservation-id-status="${reservation.reservation_id}"]`,
-        "seated"
-      );
-
-      expect(containsSeated).toBe(true);
-      expect(
-        await page.$(
-          `[href="/reservations/${reservation.reservation_id}/seat"]`
-        )
-      ).toBeNull();
-    });
-
-    test("Finishing the table removes the reservation from the list", async () => {
-      await seatReservation(reservation.reservation_id, table.table_id);
-
-      await page.reload({ waitUntil: "networkidle0" });
-
-      await page.screenshot({
-        path: ".screenshots/us-06-finish-before.png",
-        fullPage: true,
-      });
+      expect(containsOccupied).toBe(true);
 
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
       await page.waitForSelector(finishButtonSelector);
 
       page.on("dialog", async (dialog) => {
+        expect(dialog.message()).toContain(
+          "Is this table ready to seat new guests?"
+        );
         await dialog.accept();
       });
 
@@ -123,15 +87,59 @@ describe("US-06 - Reservation status - E2E", () => {
       });
 
       await page.screenshot({
-        path: ".screenshots/us-06-finish-after.png",
+        path: ".screenshots/us-05-dashboard-finish-button-after.png",
         fullPage: true,
       });
 
-      expect(
-        await page.$(
-          `[data-reservation-id-status="${reservation.reservation_id}"]`
-        )
-      ).toBeNull();
+      const containsFree = await containsText(
+        page,
+        `[data-table-id-status="${table.table_id}"]`,
+        "free"
+      );
+
+      expect(containsFree).toBe(true);
+    });
+
+    test("clicking finish button and then clicking CANCEL does nothing", async () => {
+      await page.screenshot({
+        path: ".screenshots/us-05-dashboard-finish-button-cancel-before.png",
+        fullPage: true,
+      });
+
+      const containsOccupied = await containsText(
+        page,
+        `[data-table-id-status="${table.table_id}"]`,
+        "occupied"
+      );
+
+      expect(containsOccupied).toBe(true);
+
+      const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
+      await page.waitForSelector(finishButtonSelector);
+
+      page.on("dialog", async (dialog) => {
+        expect(dialog.message()).toContain(
+          "Is this table ready to seat new guests?"
+        );
+        await dialog.dismiss();
+      });
+
+      await page.click(finishButtonSelector);
+
+      await page.waitForTimeout(1000);
+
+      await page.screenshot({
+        path: ".screenshots/us-05-dashboard-finish-button-cancel-after.png",
+        fullPage: true,
+      });
+
+      const containsFree = await containsText(
+        page,
+        `[data-table-id-status="${table.table_id}"]`,
+        "free"
+      );
+
+      expect(containsFree).toBe(false);
     });
   });
 });

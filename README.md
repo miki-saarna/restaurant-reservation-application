@@ -27,21 +27,21 @@ This application provides restaurants with an efficient reservation booking syst
 
 ## Technologies
 
-This application's front-end is built on React using React-Router and React hooks and styling was added through Vanilla CSS. An API was created at `./front-end/src/utils/api.js`. This API handles all promises necessary to interact with the back-end API database.
+This application's front-end is built on React and styling was added through Vanilla CSS. An API handles all promises necessary to interact with the back-end API database.
 
-The application's back-end is built on Express.js, Knex.js, and PostgreSQL servers and utilizing RESTful APIs. Express handles all middleware requests and responses including validation errors while Knex queries mapped to CRUDL operations interact directly with the PostgreSQL databases. Knex is also used to configure table migrations.
+The application's back-end is built on Express.js, Knex.js, and PostgreSQL servers utilizing RESTful APIs. Knex queries mapped to CRUD operations interact directly with the PostgreSQL databases.
 
-The Express CORS package is used to provide an extra layer of security by only allowing specified domains to access the back-end API.
+The Express CORS package is implemented for specified domains to access the back-end API.
 
 - Backend API setup
 - Creating RESTful APIs
 - Using Express for middleware request and response handling
 - Implementing PostgreSQL servers
-- Using Knex.js to configure migrations
-- Building and mapping CRUDL operations between Knex.js and SQL commands
-- Frontend built on React with React router
-- Added layer of security with Express CORS package
-- Project deployment through Vercel
+- Using Knex to configure migrations
+- Building and mapping CRUD operations between Knex.js and SQL commands
+- Frontend built on React with React router and hooks
+- Express CORS package implemented
+- Project deployed on Vercel
 
 ## How To Use
 

@@ -53,7 +53,7 @@ The Express CORS package is implemented for specified domains to access the back
 4. Update the newly created `.env` file in the `./back-end` directory with the connection URLs to your SQL database instance
 5. Run `cp ./front-end/.env.sample ./front-end/.env`
 6. The newly created `.env` file in the `./front-end` directory does not need to be editted, unless you wish to connect to the backend at a location other than `http://localhost:5000`
-7. On line 20 of the `./back-end/src/app.js` file, change the second argument of the `res.header` function to the location where you plan to run the front-end of the application
+7. On line 19 of the `./back-end/src/app.js` file, alter the value(s) of the `allowedDomains` array to include the location(s) where you plan to run the front-end of the application
 8. Run `npm install` to install project dependencies
 9. Run `npm start` to start your server
 

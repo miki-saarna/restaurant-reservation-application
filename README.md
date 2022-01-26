@@ -55,9 +55,7 @@ The Express CORS package is implemented for specified domains to access the back
 6. The newly created `.env` file in the `./front-end` directory does not need to be editted, unless you wish to connect to the backend at a location other than `http://localhost:5000`
 7. On line 19 of the `./back-end/src/app.js` file, alter the value(s) of the `allowedDomains` array to include the location(s) where you plan to run the front-end of the application
 8. Run `npm install` to install project dependencies
-9. Run `npm start` to start your server
-
-Running `npm start` will run both the backend and the client.
+9. Run `npm start` to start your client and server concurrently
 
 Please reach out for assitance if you are having trouble getting the server to properly run.
 

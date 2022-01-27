@@ -14,9 +14,9 @@
 
 ## Live Application
 
-This application can be viewed here: [restaurant-reservation-application.vercel.app](restaurant-reservation-application.vercel.app)
+This application can be viewed here: [restaurant-reservation-application.vercel.app](https://restaurant-reservation-application.vercel.app)
 
-The backend API is currently running here: [restaurant-reservation-application-server.vercel.app](restaurant-reservation-application-server.vercel.app)
+The backend API is currently running here: [restaurant-reservation-application-server.vercel.app](https://restaurant-reservation-application-server.vercel.app)
 
 Both the client and server are hosted on [Vercel](https://vercel.com/) with the SQL Databases hosted by [ElephantSQL](https://www.elephantsql.com/)
 

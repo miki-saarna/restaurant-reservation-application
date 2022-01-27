@@ -9,6 +9,7 @@
 - [How To Use](#how-to-use)
 - [API Paths](#api-paths)
 - [Application Features](#application-features)
+- [Version 2.0 (future upgrade)](#version-20)
 - [License](#license)
 - [Author Info](#author-info)
 
@@ -151,6 +152,16 @@ The submit button directs the user to the dashboard, defaulted to the current da
 ![Reservation assigned to table](./images/reservation-assigned-to-table.png)
 
 The status of a reservation changes to "seated" when it has been assigned to a table. The "Seat", "Edit", and "Cancel" buttons will no longer display on a seated reservation. The status of the corresponding table will change to "Occupied". A "Finish" button will now appear on the occupied table.
+
+## Version 2.0
+
+There are a number of soon-to-arrive features planned for this application, including but not limited to:
+
+- Ability to edit tables
+- Ability to customize the dashboard with the logo or name of a restaurant
+- Designing a custom floor-plan for a restaurnat's tables that include creating tables of different shapes
+
+Feel free to reach out to me if there are any other features not listed that you would like to request to be added.
 
 ## License
 

@@ -155,11 +155,13 @@ The status of a reservation changes to "seated" when it has been assigned to a t
 
 ## Version 2.0
 
-There are a number of soon-to-arrive features planned for this application, including but not limited to:
+There are a number of updates for the application planned for the near-future, including consolidating the API calls to the database to use one connection instead of opening a separate connection for each action made on the app, which will help speed up the app significantly. Other features planned for this application include but are not limited to:
 
 - Ability to edit tables
 - Ability to customize the dashboard with the logo or name of a restaurant
-- Designing a custom floor-plan for a restaurnat's tables that include creating tables of different shapes
+- Designing a custom floor-plan or layout for a restaurnat's tables that include creating tables of different shapes
+- Limiting the number of reservations that can be set in any given time frame, to prevent over-booking
+- Designing two layers of users: administrator and normal user. A normal user will have access to create, edit, and delete reservations, but an administrator can also create, edit, and delete tables
 
 Feel free to reach out to me if there are any other features not listed that you would like to request to be added.
 

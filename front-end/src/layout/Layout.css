@@ -75,49 +75,62 @@ nav > ul > li > a {
   white-space: nowrap;
 }
 
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  nav > ul > li > a::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 1px;
+    bottom: -3px;
+    left: 0;
+    background-color: #f9f9f9;
+  
+    transform: scaleX(0);
+    -moz-transform: scaleX(0);
+    -ms-transform: scaleX(0);
+    -o-transform: scaleX(0);
+    -webkit-transform: -webkit-scaleX(0);
+  
+    transform-origin: left;
+    -moz-transform-origin: left;
+    -ms-transform-origin: left;
+    -o-transform-origin: left;
+    -webkit-transform-origin: left;
+  
+    transition: transform 0.3s ease;
+    -moz-transition: -moz-transform 0.3s ease;
+    -ms-transition: -ms-transform 0.3s ease;
+    -o-transition: -o-transform 0.3s ease;
+    -webkit-transition: -webkit-transform 0.3s ease;
+  }
+  
+  nav > ul > li > a:hover::after {
+    transform: scaleX(1);
+    -moz-transform: -moz-scaleX(1);
+    -ms-transform: -ms-scaleX(1);
+    -o-transform: -o-scaleX(1);
+    -webkit-transform: -webkit-scaleX(1);
+  }
+
+  nav > ul > li > a:hover {
+  transform: translateY(2px); 
+  }
+
+}
+
+/* for both mouse and touch */
 nav > ul > li > a:hover {
   color: #f9f9f9;
   text-decoration: none;
   transition: .2s; 
   display: inline-block; 
+}
+
+/* for touch */
+nav > ul > li > a:active {
   transform: translateY(2px); 
-}
-
-nav > ul > li > a::after {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 1px;
-  bottom: -3px;
-  left: 0;
-  background-color: #f9f9f9;
-
-  transform: scaleX(0);
-  -moz-transform: scaleX(0);
-  -ms-transform: scaleX(0);
-  -o-transform: scaleX(0);
-  -webkit-transform: -webkit-scaleX(0);
-
-  transform-origin: left;
-  -moz-transform-origin: left;
-  -ms-transform-origin: left;
-  -o-transform-origin: left;
-  -webkit-transform-origin: left;
-
-  transition: transform 0.3s ease;
-  -moz-transition: -moz-transform 0.3s ease;
-  -ms-transition: -ms-transform 0.3s ease;
-  -o-transition: -o-transform 0.3s ease;
-  -webkit-transition: -webkit-transform 0.3s ease;
-}
-
-nav > ul > li > a:hover::after {
-  transform: scaleX(1);
-  -moz-transform: -moz-scaleX(1);
-  -ms-transform: -ms-scaleX(1);
-  -o-transform: -o-scaleX(1);
-  -webkit-transform: -webkit-scaleX(1);
 }
 
 nav > ul > li > a::before {
@@ -131,7 +144,6 @@ nav > ul > li > a::before {
   color: #f9f9f9;
   margin-right: 5px;
 }
-
 
 nav > ul > li:nth-child(1) a::before {
   content: '\f14e'
@@ -188,7 +200,16 @@ nav > ul > li:nth-child(4) a::before {
   margin-left: 2px;
 }
 
-#previous:hover, #previous:active, #next:hover, #next:active, #present:hover, #present:active {
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  #previous:hover, #next:hover, #present:hover {
+    background-color: rgba(1, 1, 1, 0.9);
+    color: #fbfbfb;
+  }
+}
+
+/* for touch */
+#previous:active, #next:active, #present:active {
   background-color: rgba(1, 1, 1, 0.9);
   color: #fbfbfb;
 }
@@ -226,8 +247,40 @@ button.cancel {
   margin-right: 0;
 }
 
-.reservation button:hover {
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  .reservation button:hover {
+    transition-duration: .2s;
+  }
+
+  .seat:hover {
+    background-color: #5adf9c;
+  }
+
+  .edit:hover {
+    background-color: rgb(255, 229, 136);
+  }
+
+  .cancel:hover {
+    background-color: #ff5f72;
+  }
+}
+
+/* for touch */
+.reservation button:active {
   transition-duration: .2s;
+}
+
+.seat:active {
+  background-color: #5adf9c;
+}
+
+.edit:active {
+  background-color: rgb(255, 229, 136);
+}
+
+.cancel:active {
+  background-color: #ff5f72;
 }
 
 .status {
@@ -238,27 +291,14 @@ button.cancel {
   background-color: #34d685;
 }
 
-.seat:hover {
-  background-color: #5adf9c;
-}
-
 .edit {
   background-color: rgba(244, 211, 94);
-}
-
-.edit:hover {
-  background-color: rgb(255, 229, 136);
 }
 
 .cancel {
   background-color: #ef233c;
   color: #edf2f4;
 }
-
-.cancel:hover {
-  background-color: #ff5f72;
-}
-
 
 /* tables */
 
@@ -287,7 +327,17 @@ button.cancel {
   background-color: #ef233c;
 }
 
-.table button:hover {
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  .table button:hover {
+    color: #ef233c;
+    background-color: #edf2f4;
+    transition-duration: .3s;
+  }
+}
+
+/* for touch */
+.table button:active {
   color: #ef233c;
   background-color: #edf2f4;
   transition-duration: .3s;
@@ -313,21 +363,25 @@ button.x {
   margin: 0;
 }
 
-button.x:hover {
-  background-color: transparent;
-  font-size: 23px;
-  color: white;
-  transform: translate(7%, -12%);
-  transition-timing-function: cubic-bezier(.4,0,.2,1);
-  transition-duration: .2s;
-  text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  button.x:hover {
+    background-color: transparent;
+    font-size: 23px;
+    color: white;
+    transform: translate(7%, -12%);
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .2s;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
+  }
 }
+
 
 button.x:focus {
   outline: none;
 }
 
-/* for mobile? */
+/* for touch */
 button.x:active {
   font-size: 23px;
   color: white;
@@ -368,21 +422,9 @@ form.create button:first-of-type {
   background-color: #5adf9c;
 }
 
-form.create button:first-of-type:hover, form.create button:first-of-type:active {
-  background-color: #34d685;
-}
-
 form.create button:last-of-type {
   margin-right: 8px;
   background-color: #ff5f72;
-}
-
-form.create button:last-of-type:hover, form.create button:last-of-type:active {
-  background-color: #ef233c;
-}
-
-form.search input {
-  margin-top: 3px;
 }
 
 form.search button.submitSearch {
@@ -390,8 +432,30 @@ form.search button.submitSearch {
   margin: 0 0 5px;
 }
 
-form.search button.submitSearch:hover, form.search button.submitSearch:active {
+/* for mouse */
+@media(hover: hover) and (pointer: fine) {
+  form.create button:first-of-type:hover {
+    background-color: #34d685;
+  }
+  form.create button:last-of-type:hover {
+    background-color: #ef233c;
+  }
+  form.search button.submitSearch:hover {
+    background-color: #34d685;
+  }
+}
+
+/* for touch */
+form.create button:first-of-type:active, form.search button.submitSearch:active {
   background-color: #34d685;
+}
+
+form.create button:last-of-type:active {
+  background-color: #ef233c;
+}
+
+form.search input {
+  margin-top: 3px;
 }
 
 form.assignment label {

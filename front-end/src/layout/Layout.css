@@ -21,6 +21,7 @@ section > h3 {
 }
 
 button {
+  color: rgb(0,0,0);
   border: none;
   border-radius: 9px;
   padding: 3px 10px;
@@ -337,7 +338,7 @@ button.cancel {
 }
 
 /* for touch */
-.table button:active {
+.table > button.button:active {
   color: #ef233c;
   background-color: #edf2f4;
   transition-duration: .3s;
@@ -425,6 +426,7 @@ form.create button:first-of-type {
 form.create button:last-of-type {
   margin-right: 8px;
   background-color: #ff5f72;
+  color: #f9f9f9;
 }
 
 form.search button.submitSearch {

@@ -386,7 +386,6 @@ button.x:focus {
 button.x:active {
   font-size: 23px;
   color: white;
-  transform: translate(7%, -12%);
   transition-timing-function: cubic-bezier(.4,0,.2,1);
   transition-duration: .2s;
   text-shadow: 2px 2px 4px rgba(255,255,255,0.2), 0px -5px 15px rgba(255,255,255,0.3);
@@ -421,6 +420,7 @@ form.create button {
 form.create button:first-of-type {
   margin-right: 8px;
   background-color: #5adf9c;
+  color: #f9f9f9;
 }
 
 form.create button:last-of-type {
@@ -431,6 +431,7 @@ form.create button:last-of-type {
 
 form.search button.submitSearch {
   background-color: #5adf9c;
+  color: #f9f9f9;
   margin: 0 0 5px;
 }
 

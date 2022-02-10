@@ -49,5 +49,6 @@
   "author": "Thinkful, Inc.",
   "license": "UNLICENSED",
   "devDependencies": {
+    "concurrently": "^7.0.0"
   }
 }

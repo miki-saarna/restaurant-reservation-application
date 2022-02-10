@@ -35,7 +35,7 @@ function reservationTimeValidator() {
     
         // validation if reservation is not during open hours
         const reservationTime = data.reservation_time;  
-        if (reservationTime < '10:30:00') {
+        if (reservationTime < '10:30') {
           return next({ status: 400, message: `The restaurant does not open until 10:30 AM.`})
         }
     

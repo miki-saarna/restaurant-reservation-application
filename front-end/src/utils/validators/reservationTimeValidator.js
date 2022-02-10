@@ -32,7 +32,7 @@ export default function reservationTimeValidator(setFrontendValidationError, dat
     }
   
     // validation if reservation is not during open hours
-    if (time < '10:30:00') {
+    if (time < '10:30') {
       setFrontendValidationError({ message: `The restaurant does not open until 10:30 AM.`})
       return true;
     }

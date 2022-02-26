@@ -58,6 +58,8 @@ The Express CORS package is implemented for specified domains to access the back
 8. Run `npm install` to install project dependencies
 9. Run `npm start` to start your client and server concurrently
 
+> Note: if you choose to install the application locally, a minor change may have to be made within `./back-end/src/utils/validators/reservationTimeValidator.js`. Due to a timezone issue when deploying the app to Vercel, you have have to comment out line 26 of the above-mentioned file and uncomment line 25.
+
 Please reach out for assitance if you are having trouble getting the server to properly run.
 
 ## API Paths

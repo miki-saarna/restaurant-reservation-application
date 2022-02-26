@@ -26,7 +26,7 @@ function reservationTimeValidator() {
           if (reservationDate - presentDate < 0) {
         // the line below is for the build version for Vercel
         // if (reservationDate - presentDate < 0) {
-          return next({ status: 400, message: `Reservation date and time cannot be for a past date. Must be for a future date.`})
+          return next({ status: 400, message: `Reservation date and time must be for a future date.`})
         }
     
         // validation if reservation is on a tuesday
